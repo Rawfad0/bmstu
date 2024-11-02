@@ -1,0 +1,8 @@
+First_Object
+10
+1
+Second_Object
+10
+10
+Object_without_volume
+10

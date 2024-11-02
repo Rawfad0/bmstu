@@ -1,0 +1,12 @@
+Name_that_25_symbols_long
+0.333
+0.333
+Second_Object
+0.00001
+1000000
+Third
+120013
+1214
+ALL
+1
+1

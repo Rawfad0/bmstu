@@ -1,0 +1,18 @@
+/**
+* Модуль содержащий константы
+*/
+
+#ifndef __CONSTS__H__
+#define __CONSTS__H__
+
+// Коды возврата
+#define EXIT_CODE_INCORRECT_ARGUMENT_COUNT 53
+#define EXIT_CODE_INCORRECT_ARGUMENT 53
+#define EXIT_CODE_INCORRECT_FILE 2
+#define EXIT_CODE_INCORRECT_SIZE 3
+#define EXIT_CODE_INCORRECT_INPUT 4
+#define EXIT_CODE_INCORRECT_PREFIX 5
+#define EXIT_CODE_INCORRECT_ARRAY_SIZE 6
+#define EXIT_CODE_STUDENT_NOT_FOUND 7
+
+#endif // __CONSTS__H__
