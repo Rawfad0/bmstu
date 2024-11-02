@@ -1,0 +1,110 @@
+{
+  "tests": [
+    {
+      "num": "01",
+      "command_type": "draw_ellipse",
+      "func_id": 0,
+      "ellipse_center_x": 100,
+      "ellipse_center_y": 100,
+      "ellipse_radius_x": 50,
+      "ellipse_radius_y": 30,
+      "description": "Построение окружности с центром (100, 100) и радиусом (50, 30) с помощью канонического уравнения"
+    },
+
+    {
+      "num": "02",
+      "command_type": "draw_spectre",
+      "func_id": 0,
+      "spectre_step_x": 10,
+      "spectre_step_y": 10,
+      "spectre_number": 5,
+      "spectre_radius_x": 100,
+      "spectre_radius_y": 100,
+      "description": "Построение спектра 5 окружностей с радиусом (100, 100) с шагом (10, 10) с помощью канонического уравнения"
+    },
+
+    {
+      "num": "03",
+      "command_type": "draw_spectre",
+      "func_id": 1,
+      "spectre_step_x": 10,
+      "spectre_step_y": 10,
+      "spectre_number": 5,
+      "spectre_radius_x": 100,
+      "spectre_radius_y": 100,
+      "description": "Построение спектра 5 окружностей с радиусом (100, 100) с шагом (10, 10) с помощью параметрического уравнения"
+    },
+
+    {
+      "num": "04",
+      "command_type": "draw_spectre",
+      "func_id": 2,
+      "spectre_step_x": 10,
+      "spectre_step_y": 10,
+      "spectre_number": 5,
+      "spectre_radius_x": 100,
+      "spectre_radius_y": 100,
+      "description": "Построение спектра 5 окружностей с радиусом (100, 100) с шагом (10, 10) с помощью алгоритма Брезенхема"
+    },
+
+    {
+      "num": "05",
+      "command_type": "draw_spectre",
+      "func_id": 3,
+      "spectre_step_x": 10,
+      "spectre_step_y": 10,
+      "spectre_number": 5,
+      "spectre_radius_x": 100,
+      "spectre_radius_y": 100,
+      "description": "Построение спектра 5 окружностей с радиусом (100, 100) с шагом (10, 10) с помощью библиотечной реализации"
+    },
+
+    {
+      "num": "06",
+      "command_type": "draw_spectre",
+      "func_id": 0,
+      "spectre_step_x": 10,
+      "spectre_step_y": 10,
+      "spectre_number": 5,
+      "spectre_radius_x": 50,
+      "spectre_radius_y": 100,
+      "description": "Построение спектра 5 эллипсов с радиусом (50, 100) с шагом (10, 10) с помощью канонического уравнения"
+    },
+
+    {
+      "num": "07",
+      "command_type": "draw_spectre",
+      "func_id": 1,
+      "spectre_step_x": 10,
+      "spectre_step_y": 10,
+      "spectre_number": 5,
+      "spectre_radius_x": 50,
+      "spectre_radius_y": 100,
+      "description": "Построение спектра 5 эллипсов с радиусом (50, 100) с шагом (10, 10) с помощью параметрического уравнения"
+    },
+
+    {
+      "num": "08",
+      "command_type": "draw_spectre",
+      "func_id": 2,
+      "spectre_step_x": 10,
+      "spectre_step_y": 10,
+      "spectre_number": 5,
+      "spectre_radius_x": 50,
+      "spectre_radius_y": 100,
+      "description": "Построение спектра 5 эллипсов с радиусом (50, 100) с шагом (10, 10) с помощью алгоритма Брезенхема"
+    },
+
+    {
+      "num": "09",
+      "command_type": "draw_spectre",
+      "func_id": 3,
+      "spectre_step_x": 10,
+      "spectre_step_y": 10,
+      "spectre_number": 5,
+      "spectre_radius_x": 50,
+      "spectre_radius_y": 100,
+      "description": "Построение спектра 5 эллипсов с радиусом (50, 100) с шагом (10, 10) с помощью библиотечной реализации"
+    }
+  ]
+}

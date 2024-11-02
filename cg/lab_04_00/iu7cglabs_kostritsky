@@ -1,0 +1,40 @@
+SRCS = src/main.py src/draw.py src/algs.py
+
+run : release out/main.py
+	python3 -m out.main
+
+release : ${SRCS} out/
+	cp -r src/* out/
+
+clean : out/
+	-rm -r out/
+	-rm reports/*-latest.txt
+	-rm -r results/
+	-rm .coverage
+
+report-unittesting-latest.txt : src/main.py reports/
+	coverage run --source=src/ -m unittest discover -s tests -p 'test_*'
+	coverage report > reports/report-unittesting-latest.txt
+	python3 tests/report_unittesting_formatter.py
+
+report-functesting-latest.txt : out/main.py reports/ results/
+	coverage run --source=out/ -m tests.func_test
+	coverage report > reports/report-functesting-latest.txt
+	python3 tests/report_functesting_formatter.py
+
+# checkall :
+
+saveolds :
+	-cp reports/report-unittesting-latest.txt reports/report-unittesting-old.txt
+	-cp reports/report-functesting-latest.txt reports/report-functesting-old.txt
+
+out/main.py : release
+
+out/ :
+	mkdir out
+
+reports/ :
+	mkdir reports
+
+results/ :
+	mkdir results

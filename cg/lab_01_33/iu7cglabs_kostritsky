@@ -1,0 +1,24 @@
+SRCS = src/main.py src/func.py
+
+run : release out/main.py
+	python3 out/main.py
+
+release : ${SRCS} out/
+	cp ${SRCS} out/
+
+report-unittesting-latest.txt : out/main.py
+	echo "0.00" > report-unittesting-latest.txt
+
+report-functesting-latest.txt : out/main.py
+	echo "0.00 0" > report-functesting-latest.txt
+
+# format :
+
+# checkall :
+
+saveolds :
+	cp report-unittesting-latest.txt report-unittesting-old.txt
+	cp report-functesting-latest.txt report-functesting-old.txt
+
+out/ :
+	mkdir out

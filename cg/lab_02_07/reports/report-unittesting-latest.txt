@@ -1,0 +1,10 @@
+14.00 
+Name                Stmts   Miss  Cover
+---------------------------------------
+src/__init__.py         0      0   100%
+src/draw.py            18     18     0%
+src/main.py           209    209     0%
+src/p_funcs.py         22      0   100%
+src/smile_face.py      15      0   100%
+---------------------------------------
+TOTAL                 264    227    14%

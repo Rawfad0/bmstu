@@ -1,0 +1,9 @@
+24.00 
+Name           Stmts   Miss  Cover
+----------------------------------
+src/alg.py        83      4    95%
+src/draw.py       31     31     0%
+src/funcs.py       2      2     0%
+src/main.py      213    213     0%
+----------------------------------
+TOTAL            329    250    24%
