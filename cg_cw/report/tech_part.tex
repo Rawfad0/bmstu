@@ -1,0 +1,270 @@
+\chapter{Технологический раздел}
+
+\section{Выбор средств реализации}
+
+В качестве используемого языка программирования был выбран $Python$~\cite{lit5} по слудующим причинам:
+
+\begin{itemize}
+	\item средствами языка можно реализовать все неободимые алгоритмы;
+	\item данный язык является объектно-ориентированным, что позволит структурировать программу;
+	\item язык обладает необходимой для реализации задачи библитекой для создания графического интерфеса пользователя $PyQt6$~\cite{lit6};
+	\item язык обладает библитекой для визуализации данных $Matplotlib$~\cite{lit4}.
+\end{itemize}
+
+\section{Структура программы}
+
+\begin{figure}[h]
+	\centering
+	\includesvg[scale=0.9]{/Users/rf9/PycharmProjects/cg_cw/report/images/uml.drawio.svg}
+	\caption{Диаграмма классов разработанного ПО}
+	\label{fig:uml}
+\end{figure}
+
+
+\newpage
+
+\section{Детали реализации}
+%\section{Реализация алгоритмов}
+
+%В листингах~\ref{lst:11}-\ref{lst:l21} представлена реализация алгоритмов Z-буффера и трассировки лучей.
+
+%\subsection{Алгоритм Z-буффера}
+
+%\begin{center}
+%	\captionsetup{justification=raggedright,singlelinecheck=off}
+%	\begin{lstlisting}[label=lst:l11,caption=Реализация алгоритма Z-буффера]
+%def z_buffer(c_buffer, d_buffer, height, width, camera, objs, new_basis_points):
+%	k = 2
+%	center, h_dir, v_dir, min_z, max_z = camera
+%	points, triangles = objs
+%	tps = transition_to_new_basis(center[:3], h_dir, v_dir, points, new_basis_points)
+%	for triangle in triangles:
+%		i0, i1, i2 = triangle
+%		print(i0, i1, i2)
+%		v0, v1, v2 = tps[i0], tps[i1], tps[i2]
+%		print(v0, v1, v2)
+%		if not is_triangle_degenerate(v0, v1, v2):
+%			a, b, c, d = plane_equation(v0, v1, v2)
+%			for i in range(height):
+%				for j in range(width):
+%					px, py = (i - height // 2)/k, (j - width // 2)/k
+%					pz = -(a*px + b*py + d) / c
+%					if min_z > pz > max_z:
+%						continue
+%					p = np.array([px, py, 0])
+%					if point_in_triangle(p, v0, v1, v2):
+%						if pz < d_buffer[i][j]:
+%							d_buffer[i][j] = pz
+%							c_buffer[i][j] = np.array([255, 255, 255], dtype=np.uint8)
+%	return c_buffer
+%	\end{lstlisting}
+%\end{center}
+
+%\begin{center}
+%	\captionsetup{justification=raggedright,singlelinecheck=off}
+%	\begin{lstlisting}[label=lst:l13,caption=Реализация алгоритма нахождения уравнения плоскости по трем точкам ]
+%def plane_equation(p0, p1, p2):
+%	a, b = p1 - p0, p2 - p0
+%	ax, ay, az = a
+%	bx, by, bz = b
+%	px, py, pz = p0
+%	A = ay*bz - by*az
+%	B = ax*bz - bx*az
+%	C = ax*by - bx*ay
+%	D = -A*px - B*py - C*pz
+%	return A, B, C, D
+%	\end{lstlisting}
+%\end{center}
+
+%\subsection{Алгоритм трассировки лучей}
+
+В листингах~\ref{lst:l21}-\ref{lst:l24} представлена реализация алгоритма трассировки лучей.
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:l21,caption=Реализация алгоритма трассировки лучей]
+def ray_tracing(c_buffer, d_buffer, height, width, camera, objs):
+	center, h_dir, v_dir, h_fov, v_fov, min_z, max_z = camera
+	rays = comp_rays(height, width, h_dir, v_dir, h_fov, v_fov)
+	for i in range(height):
+		for j in range(width):
+			min_d = max_z
+			res_color = None
+			for k in range(len(objs)):
+				points, triangles = objs[k]
+				b, d, color = intersect_obj((center, rays[i][j]), points, triangles, max_z)
+				if b and d < min_d and min_z < d < max_z:
+					min_d = d
+					res_color = color
+			if res_color is not None:
+				c_buffer[i][j] = res_color
+				d_buffer[i][j] = min_d
+	return c_buffer, d_buffer, rays
+	\end{lstlisting}
+\end{center}
+
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:l22,caption=Реализация алгоритма вычисления лучей]
+def comp_rays(height, width, h_dir, v_dir, h_fov, v_fov):
+	z = np.cross(h_dir, v_dir)
+	z /= np.linalg.norm(z, ord=2)
+	h = 2 * tan(pi * h_fov / 360) / width 
+	v = 2 * tan(pi * v_fov / 360) / height
+	rays = np.zeros((height, width, 3))
+	for i in range(height):
+		for j in range(width):
+			res = (j + 0.5 - width / 2) * h * h_dir + (i + 0.5 - height / 2) * v * v_dir + z
+			res /= np.linalg.norm(res, ord=2)
+			rays[i][j] = res
+	return rays
+	\end{lstlisting}
+\end{center}
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:l23,caption=Реализация алгоритма определения пересечения луча с треугольником]
+def intersect_triangle(ray, v0, v1, v2):
+	v0, v1, v2 = v0[:3], v1[:3], v2[:3]
+	origin, direction = ray
+	origin = origin[:3]
+	edge1, edge2 = v1 - v0, v2 - v0
+	
+	pvec = np.cross(direction, edge2)
+	det = np.dot(edge1, pvec)
+	if -EPSILON < det < EPSILON:
+		return -1, None 
+	
+	inv_det = 1.0 / det
+	
+	tvec = origin - v0
+	u = np.dot(tvec, pvec) * inv_det
+	if u < -EPSILON or u > 1.0 + EPSILON:
+		return -1, None
+	
+	qvec = np.cross(tvec, edge1)
+	v = np.dot(direction, qvec) * inv_det
+	
+	if v < -EPSILON or u + v > 1.0 + EPSILON:
+		return -1, None
+	
+	t = np.dot(edge2, qvec) * inv_det
+	if t < 0.0:
+		return -1, None
+	if u < EPSILON or v < EPSILON or u + v > 1.0 - EPSILON:
+		return t, np.array([0, 0, 255], dtype=np.uint8)
+	return t, np.array([255, 255, 255], dtype=np.uint8)
+	\end{lstlisting}
+\end{center}
+
+\newpage
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:l24,caption=Реализация алгоритма трассировки лучей для выбранных пикселей]
+def ray_tracing_seq(c_buffer, d_buffer, height, width, camera, objs, ray_ids):
+	center, h_dir, v_dir, h_fov, v_fov, min_z, max_z = camera
+	rays = comp_rays_seq(height, width, h_dir, v_dir, h_fov, v_fov, ray_ids)
+	for i in range(len(ray_ids)):
+		min_d = max_z
+		res_color = None
+		for k in range(len(objs)):
+			points, triangles = objs[k]
+			b, d, color = intersect_obj((center, rays[i]), points, triangles, max_z)
+			if b and d < min_d and min_z < d < max_z:
+				min_d = d
+				res_color = color
+		if res_color is not None:
+			c_buffer[ray_ids[i]] = res_color
+			d_buffer[ray_ids[i]] = min_d
+	return c_buffer, d_buffer, rays
+		
+	\end{lstlisting}
+\end{center}
+
+%\begin{center}
+%	\captionsetup{justification=raggedright,singlelinecheck=off}
+%	\begin{lstlisting}[label=lst:l12,caption=Реализация алгоритма перехода к новому базису]
+%		def transition_to_new_basis(center, h_dir, v_dir, points_src, points_dst):
+%		n = np.cross(h_dir, v_dir)
+%		mtx = np.stack((-v_dir, -h_dir, n), axis=1)
+%		inv = np.linalg.inv(mtx)                    # A^-1
+%		mtx0 = -np.dot(inv, center.reshape(-1, 1))  # -(A^-1)*X0
+%		for i in range(len(points_src)):
+%		p = points_src[i][:3]
+%		p = (np.dot(inv, p.reshape(-1, 1)) + mtx0).reshape(1, -1)
+%		points_dst[i] = p
+%		return points_dst
+%	\end{lstlisting}
+%\end{center}
+
+
+\newpage
+
+\section{Интерфейс программы}
+
+Интерфейс программы представлен на рисунках~\ref{fig:p}-\ref{fig:p3}. На рисунке~\ref{fig:p} представлено окно программы. Слева находится окно для визуализации сцены камерой. Справа находятся разделы меню программы: <<Объекты>>, <<Сканирование>>, <<Облака точек>>. Движение камеры происходит при помощи клавиш клавиатуры: <<W>>, <<A>>, <<S>>, <<D>>. Вращение камеры происходит при помощи стрелок клавиатуры: вверх, влево, вниз, вправо. 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.3]{/Users/rf9/PycharmProjects/cg_cw/report/images/menu.png}
+	\caption{Интерфейс программы}
+	\label{fig:p}
+\end{figure}
+
+На рисунке~\ref{fig:p1} представлен раздел меню объектов. В нем задаются объекты сцены. Кнопка <<Добавить объект на сцену>> добавляет объект из выпадающего списка выше на сцену. Кнопка <<Удалить объект со сцены>> удаляет модели выбранные в таблице. Кнопка <<Переместить объект>> сдвигает объект на расстояния указанные в полях ниже. Кнопка <<Повернуть объект>> поворачивает объект вокруг осей на углы указанные в полях ниже и относительно точки, координаты которой указаны в полях ниже.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.3]{/Users/rf9/PycharmProjects/cg_cw/report/images/menu1.png}
+	\caption{Интерфейс программы, раздел объектов}
+	\label{fig:p1}
+\end{figure}
+
+На рисунке~\ref{fig:p2} представлен раздел меню сканирования. В нем задаются паттерн сканирования, его параметр и сценарий сканирования. Выпадающее меню <<Паттерн>> позволяет выбрать шаблон сканирования, ниже находится поле параметра, в котором задаются, к примеру, число линий или интервал сканирования. Кнопка <<Применить>> обновляет значение параметра в программе. Кнопка <<Сканировать>> создает облако точек на основе текущего положения и направления основной камеры и выбранного паттерна сканирования. Кнопка <<Добавить действие в сценарий>> добавляет точку сценария на основе информации, указанной выше. Кнопка <<Удалить выбранное действие из сценария>> удаляет точки выбранные в таблице. Кнопка <<Выполнить сценарий>> производит сканирование сцены согласно сценарию.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{/Users/rf9/PycharmProjects/cg_cw/report/images/menu2.png}
+\caption{Интерфейс программы, раздел сканирования}
+\label{fig:p2}
+\end{figure}
+
+На рисунке~\ref{fig:p3} представлен раздел меню облаков точек. В нем находится таблица облаков точек. Кнопка <<Удалить выбранное облако точек>> удаляет облака точек выбранные в таблице. 
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{/Users/rf9/PycharmProjects/cg_cw/report/images/menu3.png}
+\caption{Интерфейс программы, раздел облаков точек}
+\label{fig:p3}
+\end{figure}
+
+
+\newpage
+
+\section{Демонстрация работы}
+
+На рисунках~\ref{fig:ex4}-\ref{fig:ex5} представлена демонстрация работы программы.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.3]{/Users/rf9/PycharmProjects/cg_cw/report/images/ex4.png}
+	\caption{Пример работы программы --- облако точек грани куба вблизи}
+	\label{fig:ex4}
+\end{figure}
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.3]{/Users/rf9/PycharmProjects/cg_cw/report/images/ex6.png}
+	\caption{Пример работы программы --- облако точек четырех кубов}
+	\label{fig:ex5}
+\end{figure}
+
+
+%\section*{Вывод}
+
+%<что делали и получили в результате>
+
+\clearpage

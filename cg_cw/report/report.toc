@@ -1,0 +1,34 @@
+\babel@toc {russian}{}\relax 
+\contentsline {chapter}{ВВЕДЕНИЕ}{6}{Doc-Start}%
+\contentsline {chapter}{\numberline {1}Аналитический раздел}{7}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Описание объектов сцены}{7}{section.1.1}%
+\contentsline {section}{\numberline {1.2}LiDAR}{7}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Шаблоны сканирования}{7}{subsection.1.2.1}%
+\contentsline {section}{\numberline {1.3}Способы описания моделей}{8}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Каркасная модель}{8}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Поверхностная модель}{8}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Объемная модель}{9}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Выбор модели}{9}{subsection.1.3.4}%
+\contentsline {section}{\numberline {1.4}Способы задания объектов}{9}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Анализ алгоритмов удаления невидимых линий и поверхностей}{9}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Алгоритм Робертса}{10}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Алгоритм художника}{10}{subsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.5.3}Алгоритм Z-буффера}{10}{subsection.1.5.3}%
+\contentsline {subsection}{\numberline {1.5.4}Алгоритм трассировки лучей}{11}{subsection.1.5.4}%
+\contentsline {subsection}{\numberline {1.5.5}Выбор алгоритма}{11}{subsection.1.5.5}%
+\contentsline {chapter}{\numberline {2}Конструкторский раздел}{12}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Требования к программному обеспечению}{12}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Алгоритм трассировки лучей}{13}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Типы данных}{14}{section.2.3}%
+\contentsline {chapter}{\numberline {3}Технологический раздел}{15}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Выбор средств реализации}{15}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Структура программы}{15}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Детали реализации}{16}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Интерфейс программы}{19}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Демонстрация работы}{21}{section.3.5}%
+\contentsline {chapter}{\numberline {4}Исследовательский раздел}{22}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Технические характеристики}{22}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Описание исследования}{22}{section.4.2}%
+\contentsline {chapter}{ЗАКЛЮЧЕНИЕ}{28}{figure.caption.14}%
+\contentsline {chapter}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{29}{figure.caption.14}%
+\contentsline {chapter}{Приложение А}{30}{chapter*.15}%
