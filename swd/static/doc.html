@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>README.md</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <style>
+    body {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    h1, h2, h3 {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+
+    code {
+      background: #f4f4f4;
+      padding: 2px 4px;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+<div id="content">Load</div>
+
+<script>
+  fetch('/README.md')
+    .then(res => res.text())
+    .then(md => {
+      document.getElementById('content').innerHTML = marked.parse(md);
+    })
+    .catch(err => {
+      document.getElementById('content').innerText =
+        'Error';
+      console.error(err);
+    });
+</script>
+
+</body>
+</html>

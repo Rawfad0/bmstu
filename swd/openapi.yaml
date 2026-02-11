@@ -1,0 +1,837 @@
+openapi: 3.1.0
+info:
+  title: MarketPlace API
+  description: MarketPlace API
+  version: 1.0.0
+
+security:
+  - BearerAuth: []
+
+paths:
+  /api/v1/auth/customer/register:
+    post:
+      summary: Register new customer
+      tags: [Auth, Customer, RoleGuest]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [first_name, last_name, email, birth_date]
+              properties:
+                first_name:
+                  type: string
+                  maxLength: 100
+                last_name:
+                  type: string
+                  maxLength: 100
+                email:
+                  type: string
+                  format: email
+                birth_date:
+                  type: string
+                  format: date
+                phone:
+                  type: string
+                  maxLength: 20
+      responses:
+        "201":
+          description: Customer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        "400":
+          description: Invalid request
+
+  /api/v1/auth/seller/register:
+    post:
+      summary: Register new seller
+      tags: [Auth, Seller, RoleGuest]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [first_name, last_name, email, birth_date]
+              properties:
+                first_name:
+                  type: string
+                  maxLength: 100
+                last_name:
+                  type: string
+                  maxLength: 100
+                email:
+                  type: string
+                  format: email
+                birth_date:
+                  type: string
+                  format: date
+                phone:
+                  type: string
+                  maxLength: 20
+      responses:
+        "201":
+          description: Seller created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seller'
+        "400":
+          description: Invalid request
+
+  /api/v1/auth/login:
+    post:
+      summary: Login as customer or seller by email
+      tags: [Auth, RoleGuest]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, role]
+              properties:
+                email:
+                  type: string
+                  format: email
+                role:
+                  type: string
+                  enum: [customer, seller]
+                  description: Role of the user
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Bearer token
+                  role:
+                    type: string
+                    enum: [customer, seller]
+                    description: Role
+                  user_id:
+                    type: string
+                    format: uuid
+        "400":
+          description: Invalid request
+        "404":
+          description: User not found
+
+  /api/v1/customers/{customer_id}:
+    get:
+      summary: Get customer info
+      tags: [Customer, RoleCustomer]
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      responses:
+        "200":
+          description: Customer details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        "404":
+          description: Customer not found
+
+  /api/v1/orders:
+    get:
+      summary: Get list of current customer's orders
+      tags: [Orders, RoleCustomer]
+      responses:
+        "200":
+          description: Orders list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        "404":
+          description: Customer not found
+
+    post:
+      summary: Create new order
+      tags: [Orders, RoleCustomer]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [offer_id, quantity]
+              properties:
+                offer_id:
+                  type: string
+                  format: uuid
+                quantity:
+                  type: integer
+      responses:
+        "201":
+          description: Order created
+        "400":
+          description: Invalid request
+
+  /api/v1/orders/{order_id}/pay:
+    post:
+      summary: Pay for an order
+      description: Completes payment for the specified order using payment details
+      tags: [Orders, RoleCustomer]
+      parameters:
+        - $ref: '#/components/parameters/orderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentInfo'
+      responses:
+        "200":
+          description: Payment successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: paid
+        "400":
+          description: Invalid payment data
+        "402":
+          description: Payment failed
+        "404":
+          description: Order not found
+
+  /api/v1/reviews:
+    post:
+      summary: Add review
+      tags: [Reviews, RoleCustomer]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+      responses:
+        "201":
+          description: Review added
+        "400":
+          description: Invalid review
+
+  /api/v1/reviews/{review_id}:
+    get:
+      summary: Get review
+      tags: [Reviews, RoleCustomer]
+      parameters:
+        - $ref: '#/components/parameters/reviewId'
+      responses:
+        "200":
+          description: Review details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        "404":
+          description: Review not found
+    patch:
+      summary: Update review partially
+      tags: [Reviews, RoleCustomer]
+      parameters:
+        - $ref: '#/components/parameters/reviewId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                review_text:
+                  type: string
+                rating:
+                  type: integer
+                  minimum: 0
+                  maximum: 5
+      responses:
+        "200":
+          description: Review updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        "400":
+          description: Invalid input
+        "404":
+          description: Review not found
+    delete:
+      summary: Delete review
+      tags: [Reviews, RoleCustomer]
+      parameters:
+        - $ref: '#/components/parameters/reviewId'
+      responses:
+        "204":
+          description: Review deleted
+        "404":
+          description: Review not found
+
+  /api/v1/favorites:
+    get:
+      summary: Get current customer's favorites
+      tags: [Favorites, RoleCustomer]
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: List of favorites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Favorite'
+    post:
+      summary: Add product to current customer's favorites
+      tags: [Favorites, RoleCustomer]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [product_id]
+              properties:
+                product_id:
+                  type: string
+                  format: uuid
+      responses:
+        "201":
+          description: Added to favorites
+        "400":
+          description: Invalid request
+
+  /api/v1/favorites/{favorite_id}:
+    delete:
+      summary: Remove product from favorites
+      tags: [Favorites, RoleCustomer]
+      parameters:
+        - $ref: '#/components/parameters/favoriteId'
+      responses:
+        "204":
+          description: Favorite removed
+        "404":
+          description: Favorite not found
+
+  /api/v1/products:
+    get:
+      summary: Get list of products
+      tags: [Products, RoleCustomer]
+      responses:
+        "200":
+          description: Products list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      summary: Add new product
+      tags: [Products, RoleAdmin]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "201":
+          description: Product created
+        "400":
+          description: Invalid request
+
+  /api/v1/products/{product_id}:
+    get:
+      summary: Get product info
+      tags: [Products, RoleCustomer]
+      parameters:
+        - $ref: '#/components/parameters/productId'
+      responses:
+        "200":
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "404":
+          description: Product not found
+    put:
+      summary: Update product info
+      tags: [Products, RoleAdmin]
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/productId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "200":
+          description: Product updated
+        "400":
+          description: Invalid request
+        "404":
+          description: Product not found
+
+  /api/v1/products/{product_id}/offers:
+    get:
+      summary: Get offers for product
+      tags: [Offers, RoleCustomer]
+      parameters:
+        - $ref: '#/components/parameters/productId'
+      responses:
+        "200":
+          description: List of offers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Offer'
+        "404":
+          description: Product not found
+
+  /api/v1/stores:
+    get:
+      summary: Get list of seller stores
+      tags: [Stores, RoleSeller]
+      parameters:
+        - $ref: '#/components/parameters/sellerId'
+      responses:
+        "200":
+          description: List of stores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Store'
+        "404":
+          description: Seller not found
+    post:
+      summary: Add new store
+      tags: [Stores, RoleSeller]
+      parameters:
+        - $ref: '#/components/parameters/sellerId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        "201":
+          description: Store created
+        "400":
+          description: Invalid request
+
+  /api/v1/stores/{store_id}:
+    put:
+      summary: Update store info
+      tags: [Stores, RoleAdmin, RoleSeller]
+      parameters:
+        - $ref: '#/components/parameters/storeId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        "200":
+          description: Store updated
+        "400":
+          description: Invalid request
+        "404":
+          description: Store not found
+
+  /api/v1/stores/{store_id}/offers:
+    get:
+      summary: Get list of store offers
+      tags: [Offers, RoleSeller]
+      parameters:
+        - $ref: '#/components/parameters/storeId'
+      responses:
+        "200":
+          description: List of offers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Offer'
+        "404":
+          description: Store not found
+    post:
+      summary: Add new offer
+      tags: [Offers, RoleSeller]
+      parameters:
+        - $ref: '#/components/parameters/storeId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Offer'
+      responses:
+        "201":
+          description: Offer created
+        "400":
+          description: Invalid request
+
+  /api/v1/offers/{offer_id}:
+    put:
+      summary: Update offer info
+      tags: [Offers, RoleAdmin, RoleSeller]
+      parameters:
+        - $ref: '#/components/parameters/offerId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Offer'
+      responses:
+        "200":
+          description: Offer updated
+        "400":
+          description: Invalid request
+        "404":
+          description: Offer not found
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AuthToken:
+      type: object
+      properties:
+        token:
+          type: string
+        role:
+          type: string
+          enum: [customer, seller, admin]
+        user_id:
+          type: string
+          format: uuid
+    Customer:
+      type: object
+      required:
+        - id
+        - first_name
+        - last_name
+        - birth_date
+        - registered_at
+        - points
+      properties:
+        id:
+          type: string
+          format: uuid
+        first_name:
+          type: string
+          maxLength: 100
+        last_name:
+          type: string
+          maxLength: 100
+        phone:
+          type: string
+          maxLength: 20
+        email:
+          type: string
+          maxLength: 100
+        birth_date:
+          type: string
+          format: date
+        registered_at:
+          type: string
+          format: date-time
+        points:
+          type: integer
+
+    Seller:
+      type: object
+      required:
+        - id
+        - first_name
+        - last_name
+        - birth_date
+      properties:
+        id:
+          type: string
+          format: uuid
+        first_name:
+          type: string
+          maxLength: 100
+        last_name:
+          type: string
+          maxLength: 100
+        phone:
+          type: string
+          maxLength: 20
+        email:
+          type: string
+          maxLength: 100
+        birth_date:
+          type: string
+          format: date
+
+    Store:
+      type: object
+      required:
+        - id
+        - owner_seller_id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        owner_seller_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 200
+        ogrn:
+          type: string
+          maxLength: 50
+        rating_count:
+          type: integer
+          default: 0
+        avg_rating:
+          type: number
+          format: double
+          default: 0.0
+
+    Product:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 200
+        category:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        rating_count:
+          type: integer
+          default: 0
+        avg_rating:
+          type: number
+          format: double
+          default: 0.0
+
+    Offer:
+      type: object
+      required:
+        - id
+        - product_id
+        - store_id
+        - price
+        - quantity
+        - delivery_time
+      properties:
+        id:
+          type: string
+          format: uuid
+        product_id:
+          type: string
+          format: uuid
+        store_id:
+          type: string
+          format: uuid
+        price:
+          type: number
+          format: double
+        quantity:
+          type: integer
+        delivery_time:
+          type: integer
+
+    Order:
+      type: object
+      required:
+        - id
+        - customer_id
+        - offer_id
+        - quantity
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        customer_id:
+          type: string
+          format: uuid
+        offer_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+        status:
+          type: string
+          maxLength: 20
+    
+    PaymentInfo:
+      type: object
+      required: [total_amount, payment_method]
+      properties:
+        total_amount:
+          type: number
+          format: decimal
+          example: 1499.99
+        payment_method:
+          type: string
+          enum: [card]
+          description: Payment method type
+        card_number:
+          type: string
+          pattern: '^[0-9]{13,19}$'
+          description: Customer's credit card number
+        expiration_date:
+          type: string
+          pattern: '^(0[1-9]|1[0-2])/[0-9]{2}$'
+          description: Card expiration date in MM/YY format
+        cvc:
+          type: string
+          pattern: '^[0-9]{3,4}$'
+          description: Card CVC/CVV code
+        points:
+          type: object
+          description: Information about loyalty points used for payment
+          properties:
+            used:
+              type: integer
+              description: Number of points used
+
+    Favorite:
+      type: object
+      required:
+        - id
+        - customer_id
+        - product_id
+      properties:
+        id:
+          type: string
+          format: uuid
+        customer_id:
+          type: string
+          format: uuid
+        product_id:
+          type: string
+          format: uuid
+
+    Review:
+      type: object
+      required:
+        - id
+        - customer_id
+        - order_id
+        - review_text
+        - rating
+      properties:
+        id:
+          type: string
+          format: uuid
+        customer_id:
+          type: string
+          format: uuid
+        order_id:
+          type: string
+          format: uuid
+        review_text:
+          type: string
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 5
+
+  parameters:
+    customerId:
+      name: customer_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    sellerId:
+      name: seller_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    storeId:
+      name: store_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    productId:
+      name: product_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    offerId:
+      name: offer_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    orderId:
+      name: order_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    reviewId:
+      name: review_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    favoriteId:
+      name: favorite_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid

@@ -1,0 +1,1077 @@
+\chapter{Технологический раздел}
+
+В данном разделе будет проведен выбор средств реализации приложения, языка программирования, системы управления базой данных. Будет приведена архитектура приложения, листинги кода для создания таблиц базы данных и листинги взаимодействия приложения с базой данных. 
+
+\section{Выбор средств реализации}
+
+\subsection{Выбор языка программирования}
+
+В качестве языка программирования был выбран C\#~\cite{lit22} по следующим причинам:
+
+\begin{enumerate}
+	\item наличие библиотек Npgsql~\cite{lit24} и Dapper~\cite{lit25} для взаимодействия с PostgreSQL~\cite{lit23};
+	\item наличие библиотеки Serilog для логирования;
+	\item наличие библиотеки Xunit для тестирования.
+\end{enumerate}
+
+\clearpage
+
+\subsection{Выбор системы управления базами данных}
+
+Наиболее популярными реляционными системами управления базами данных являются~\cite{lit26}:
+
+\begin{enumerate}
+	\item PostgreSQL;
+	\item MySQL;
+	\item MariaDB;
+	\item SQLite;
+	\item Oracle Database;
+	\item Microsoft SQL Server.
+\end{enumerate}
+
+
+Для выбора реляционной системы управления базами данных воспользуемся следующими критериями:
+
+\begin{enumerate}
+	\item Есть возможность создавать собственные типы данных и операторы.
+	\item СУБД имеет неограниченную лицензию.
+\end{enumerate}
+
+Результаты сравнения реляционных систем управления базами данных по перечисленным критериям указаны в таблице~\ref{tab:db_comparison}.
+
+\begin{table}[h!]
+	\centering
+	\caption{Сравнение СУБД}
+	\label{tab:db_comparison}
+	\begin{tabular}{|l|c|c|}
+		\hline
+		\textbf{Модель БД} & \textbf{Критерий 1} & \textbf{Критерий 2} \\
+		\hline
+		PostgreSQL & Да & Да \\
+		MySQL & Нет & Нет \\
+		MariaDB & Нет & Нет \\
+		SQLite & Нет & Да \\
+		Oracle Database & Да & Нет \\
+		Microsoft SQL Server & Да & Нет \\
+		\hline
+	\end{tabular}
+\end{table}
+
+В результате анализа для реализации поставленной задачи была выбрана система управления базами данных \textbf{PostgreSQL}, потому что она удовлетворяет перечисленным критериям.
+
+\clearpage
+
+\section{Архитектура приложения}
+
+На рисунке~\ref{fig:uml} приведена подробная UML-диаграмма архитектуры приложения с разбиением по слоям согласно чистой архитектуре.
+
+\begin{figure}[h!]
+	\centering
+	\includesvg[scale=0.5]{images/uml.drawio.svg}
+	\caption{UML-диаграмма архитектуры приложения}
+	\label{fig:uml}
+\end{figure}
+
+
+\clearpage
+
+\section{Реализация базы данных}
+
+В листингах~\ref{lst:customers}-\ref{lst:stores} представлена реализация сущностей БД с использованием SQL.
+	
+\begin{lstlisting}[style=sql, caption={Таблица customers}, label={lst:customers}]
+	CREATE TABLE public.customers (
+	id uuid NOT NULL,
+	first_name varchar(100) NOT NULL,
+	last_name varchar(100) NOT NULL,
+	phone varchar(20) NULL,
+	email varchar(100) NULL,
+	birth_date date NOT NULL,
+	registered_at timestamp NOT NULL,
+	points int4 NOT NULL,
+	CONSTRAINT customers_pkey PRIMARY KEY (id)
+	);
+\end{lstlisting}
+
+\begin{lstlisting}[style=sql, caption={Таблица favorites}, label={lst:favorites}]
+	CREATE TABLE public.favorites (
+	id uuid NOT NULL,
+	customer_id uuid NOT NULL,
+	product_id uuid NOT NULL,
+	CONSTRAINT favorites_pkey PRIMARY KEY (id)
+	);
+	
+	ALTER TABLE public.favorites ADD CONSTRAINT favorites_customer_id_fkey
+	FOREIGN KEY (customer_id) REFERENCES public.customers(id);
+	
+	ALTER TABLE public.favorites ADD CONSTRAINT favorites_product_id_fkey
+	FOREIGN KEY (product_id) REFERENCES public.products(id);
+\end{lstlisting}
+
+\clearpage
+
+\begin{lstlisting}[style=sql, caption={Таблица offers}, label={lst:offers}]
+	CREATE TABLE public.offers (
+	id uuid NOT NULL,
+	product_id uuid NOT NULL,
+	store_id uuid NOT NULL,
+	price numeric(18, 2) NOT NULL,
+	quantity int4 NOT NULL,
+	delivery_time int4 NOT NULL,
+	CONSTRAINT offers_pkey PRIMARY KEY (id)
+	);
+	
+	ALTER TABLE public.offers ADD CONSTRAINT offers_product_id_fkey
+	FOREIGN KEY (product_id) REFERENCES public.products(id);
+	
+	ALTER TABLE public.offers ADD CONSTRAINT offers_store_id_fkey
+	FOREIGN KEY (store_id) REFERENCES public.stores(id);
+\end{lstlisting}
+
+\begin{lstlisting}[style=sql, caption={Таблица orders}, label={lst:orders}]
+	CREATE TABLE public.orders (
+	id uuid NOT NULL,
+	customer_id uuid NOT NULL,
+	offer_id uuid NOT NULL,
+	quantity int4 NOT NULL,
+	status varchar(20) NOT NULL,
+	CONSTRAINT orders_pkey PRIMARY KEY (id)
+	);
+	
+	ALTER TABLE public.orders ADD CONSTRAINT orders_customer_id_fkey
+	FOREIGN KEY (customer_id) REFERENCES public.customers(id);
+	
+	ALTER TABLE public.orders ADD CONSTRAINT orders_offer_id_fkey
+	FOREIGN KEY (offer_id) REFERENCES public.offers(id);
+\end{lstlisting}
+
+\clearpage
+
+\begin{lstlisting}[style=sql, caption={Таблица products}, label={lst:products}]
+	CREATE TABLE public.products (
+	id uuid NOT NULL,
+	"name" varchar(200) NOT NULL,
+	category varchar(100) NULL,
+	description text NULL,
+	rating_count int4 DEFAULT 0 NULL,
+	avg_rating float8 DEFAULT 0.0 NULL,
+	CONSTRAINT products_pkey PRIMARY KEY (id)
+	);
+\end{lstlisting}
+
+\begin{lstlisting}[style=sql, caption={Таблица reviews}, label={lst:reviews}]
+	CREATE TABLE public.reviews (
+	id uuid NOT NULL,
+	customer_id uuid NOT NULL,
+	order_id uuid NOT NULL,
+	review_text text NOT NULL,
+	rating int4 DEFAULT 0 NOT NULL,
+	CONSTRAINT reviews_pkey PRIMARY KEY (id)
+	);
+	
+	ALTER TABLE public.reviews ADD CONSTRAINT reviews_customer_id_fkey
+	FOREIGN KEY (customer_id) REFERENCES public.customers(id) ON DELETE CASCADE;
+	
+	ALTER TABLE public.reviews ADD CONSTRAINT reviews_order_id_fkey
+	FOREIGN KEY (order_id) REFERENCES public.orders(id) ON DELETE CASCADE;
+\end{lstlisting}
+
+\begin{lstlisting}[style=sql, caption={Таблица sellers}, label={lst:sellers}]
+	CREATE TABLE public.sellers (
+	id uuid NOT NULL,
+	first_name varchar(100) NOT NULL,
+	last_name varchar(100) NOT NULL,
+	phone varchar(20) NULL,
+	email varchar(100) NULL,
+	birth_date date NOT NULL,
+	CONSTRAINT sellers_pkey PRIMARY KEY (id)
+	);
+\end{lstlisting}
+
+\clearpage
+
+\begin{lstlisting}[style=sql, caption={Таблица stores}, label={lst:stores}]
+	CREATE TABLE public.stores (
+	id uuid NOT NULL,
+	owner_seller_id uuid NOT NULL,
+	"name" varchar(200) NOT NULL,
+	ogrn varchar(50) NULL,
+	rating_count int4 DEFAULT 0 NULL,
+	avg_rating float8 DEFAULT 0.0 NULL,
+	CONSTRAINT stores_pkey PRIMARY KEY (id)
+	);
+	
+	ALTER TABLE public.stores ADD CONSTRAINT stores_owner_seller_id_fkey
+	FOREIGN KEY (owner_seller_id) REFERENCES public.sellers(id);
+\end{lstlisting}
+
+
+В листинге~\ref{lst:roles_sql} представлена реализация ролевой модели базы данных.
+
+\begin{lstlisting}[language=SQL, caption={Реализация ролевой модели в PostgreSQL}, label={lst:roles_sql}]
+	CREATE ROLE marketplace_user NOINHERIT;
+	CREATE ROLE marketplace_manager NOINHERIT;
+	CREATE ROLE marketplace_admin NOINHERIT;
+
+	GRANT SELECT ON products TO marketplace_user;
+	GRANT SELECT ON offers TO marketplace_user;
+	GRANT SELECT ON stores TO marketplace_user;
+	
+	GRANT marketplace_user TO marketplace_manager;
+	GRANT SELECT, INSERT, UPDATE, DELETE ON products TO marketplace_manager;
+	GRANT SELECT, INSERT, UPDATE, DELETE ON offers TO marketplace_manager;
+	GRANT SELECT, INSERT, UPDATE, DELETE ON stores TO marketplace_manager;
+	
+	GRANT marketplace_manager TO marketplace_admin;
+	GRANT ALL PRIVILEGES ON DATABASE marketplace_db TO marketplace_admin;
+\end{lstlisting}
+
+\clearpage
+
+\section{Программный интерфейс доступа}
+
+Для доступа к базе данных использовались библиотеки Npgsql и Dapper. В листингах~\ref{lst:CustomerRepository}-\ref{lst:StoreRepository} представлена реализация репозиториев для доступа к данным.
+
+\begin{lstlisting}[caption={CustomerRepository}, label={lst:CustomerRepository}]
+	public class CustomerRepository : ICustomerRepository
+	{
+		private readonly NpgsqlConnection _connection;
+		
+		public CustomerRepository(DapperContext context)
+		{
+			_connection = context.Connection;
+		}
+		
+		public Customer Create(Customer customer)
+		{
+			var sql = @"
+			INSERT INTO customers (id, first_name, last_name, phone, email, birth_date, registered_at, points)
+			VALUES (@Id, @FirstName, @LastName, @Phone, @Email, @BirthDate, @RegisteredAt, @Points)";
+			_connection.Execute(sql, customer);
+			return customer;
+		}
+		
+		public Customer? GetById(CustomerId customerId)
+		{
+			var sql = @"
+			SELECT id,
+			first_name AS FirstName,
+			last_name AS LastName,
+			phone AS Phone,
+			email AS Email,
+			birth_date AS BirthDate,
+			registered_at AS RegisteredAt,
+			points AS Points
+			FROM customers 
+			WHERE id = @Id";
+			return _connection.QuerySingleOrDefault<Customer>(sql, new { Id = customerId.Id });
+		}
+		
+		public Customer? GetByEmail(string email)
+		{
+			var sql = @"
+			SELECT id,
+			first_name AS FirstName,
+			last_name AS LastName,
+			phone AS Phone,
+			email AS Email,
+			birth_date AS BirthDate,
+			registered_at AS RegisteredAt,
+			points AS Points
+			FROM customers 
+			WHERE email = @email";
+			return _connection.QuerySingleOrDefault<Customer>(sql, new { email });
+		}
+		
+		public Customer Update(Customer customer)
+		{
+			var sql = @"
+			UPDATE customers
+			SET first_name=@FirstName, 
+			last_name=@LastName, 
+			phone=@Phone, 
+			email=@Email, 
+			birth_date=@BirthDate, 
+			points=@Points
+			WHERE id=@Id";
+			var rows = _connection.Execute(sql, customer);
+			if (rows == 0)
+			throw new RepositoryException($"Customer with id {customer.Id} not found");
+			return customer;
+		}
+	}
+\end{lstlisting}
+
+% FavoriteRepository
+\begin{lstlisting}[caption={FavoriteRepository}, label={lst:FavoriteRepository}]
+	public class FavoriteRepository : IFavoriteRepository
+	{
+		private readonly NpgsqlConnection _connection;
+		
+		public FavoriteRepository(DapperContext context)
+		{
+			_connection = context.Connection;
+		}
+		
+		public Favorite Create(Favorite favorite)
+		{
+			var sql = @"
+			INSERT INTO favorites (id, customer_id, product_id)
+			VALUES (@Id, @CustomerId, @ProductId)";
+			_connection.Execute(sql, favorite);
+			return favorite;
+		}
+		
+		public Favorite? GetById(FavoriteId favoriteId)
+		{
+			var sql = @"
+			SELECT id,
+			customer_id AS CustomerId,
+			product_id AS ProductId 
+			FROM favorites 
+			WHERE id=@Id";
+			return _connection.QuerySingleOrDefault<Favorite>(sql, new { Id = favoriteId.Id });
+		}
+		
+		public List<Favorite> GetByCustomerId(CustomerId customerId)
+		{
+			var sql = @"
+			SELECT id,
+			customer_id AS CustomerId,
+			product_id AS ProductId
+			FROM favorites
+			WHERE customer_id = @CustomerId";
+			return _connection.Query<Favorite>(sql, new { CustomerId = customerId.Id }).ToList();
+		}
+		
+		public List<FavoriteDetailsDto> GetFavoriteDetailsByCustomerId(CustomerId customerId)
+		{
+			var sql = @"
+			SELECT f.id as FavoriteId,
+			f.customer_id as CustomerId,
+			p.id as ProductId,
+			p.name as ProductName,
+			p.description as ProductDescription
+			FROM favorites f
+			JOIN products p ON f.product_id = p.id
+			WHERE f.customer_id = @CustomerId";
+			return _connection.Query<FavoriteDetailsDto>(sql, new { CustomerId = customerId.Id }).ToList();
+		}
+		
+		public Favorite? DeleteById(FavoriteId favoriteId)
+		{
+			var favorite = GetById(favoriteId);
+			if (favorite == null) return null;
+			var sql = "DELETE FROM favorites WHERE id=@Id";
+			_connection.Execute(sql, new { Id = favoriteId.Id });
+			return favorite;
+		}
+	}
+\end{lstlisting}
+
+% OfferRepository
+\begin{lstlisting}[caption={OfferRepository}, label={lst:OfferRepository}]
+	public class OfferRepository : IOfferRepository
+	{
+		private readonly NpgsqlConnection _connection;
+		
+		public OfferRepository(DapperContext context)
+		{
+			_connection = context.Connection;
+		}
+		
+		public Offer Create(Offer offer)
+		{
+			var sql = @"
+			INSERT INTO offers (id, product_id, store_id, price, quantity, delivery_time)
+			VALUES (@Id, @ProductId, @StoreId, @Price, @Quantity, @DeliveryTime)";
+			_connection.Execute(sql, offer);
+			return offer;
+		}
+		
+		public Offer? GetById(OfferId offerId)
+		{
+			var sql = @"
+			SELECT id, 
+			product_id AS ProductId, 
+			store_id AS StoreId, 
+			price AS Price, 
+			quantity AS Quantity, 
+			delivery_time AS DeliveryTime
+			FROM offers 
+			WHERE id=@Id";
+			return _connection.QuerySingleOrDefault<Offer>(sql, new { Id = offerId.Id });
+		}
+		
+		public List<Offer> GetByProductId(ProductId productId)
+		{
+			var sql = @"
+			SELECT id, 
+			product_id AS ProductId, 
+			store_id AS StoreId, 
+			price AS Price, 
+			quantity AS Quantity, 
+			delivery_time AS DeliveryTime
+			FROM offers 
+			WHERE product_id=@ProductId";
+			return _connection.Query<Offer>(sql, new { ProductId = productId.Id }).ToList();
+		}
+		
+		public List<Offer> GetByStoreId(StoreId storeId)
+		{
+			var sql = @"
+			SELECT id, 
+			product_id AS ProductId, 
+			store_id AS StoreId, 
+			price AS Price, 
+			quantity AS Quantity, 
+			delivery_time AS DeliveryTime 
+			FROM offers 
+			WHERE store_id=@StoreId";
+			return _connection.Query<Offer>(sql, new { StoreId = storeId.Id }).ToList();
+		}
+		
+		public Offer Update(Offer offer)
+		{
+			var sql = @"
+			UPDATE offers
+			SET price=@Price, 
+			quantity=@Quantity, 
+			delivery_time=@DeliveryTime
+			WHERE id=@Id";
+			var rows = _connection.Execute(sql, offer);
+			if (rows == 0)
+			throw new RepositoryException($"Offer with id {offer.Id} not found");
+			return offer;
+		}
+		
+		public Offer? DeleteById(OfferId offerId)
+		{
+			var offer = GetById(offerId);
+			if (offer == null) return null;
+			var sql = "DELETE FROM offers WHERE id=@Id";
+			_connection.Execute(sql, new { Id = offerId.Id });
+			return offer;
+		}
+	}
+\end{lstlisting}
+
+% ---------------- OrderRepository ----------------
+\begin{lstlisting}[caption={OrderRepository}, label={lst:OrderRepository}]
+	public class OrderRepository : IOrderRepository
+	{
+		private readonly NpgsqlConnection _connection;
+		
+		public OrderRepository(DapperContext context)
+		{
+			_connection = context.Connection;
+		}
+		
+		public Order Create(Order order)
+		{
+			var sql = @"
+			INSERT INTO orders (id, customer_id, offer_id, quantity, status)
+			VALUES (@Id, @CustomerId, @OfferId, @Quantity, @Status)";
+			_connection.Execute(sql, order);
+			return order;
+		}
+		
+		public Order? GetById(OrderId orderId)
+		{
+			var sql = @"
+			SELECT id, 
+			customer_id AS CustomerId, 
+			offer_id AS OfferId, 
+			quantity AS Quantity, 
+			status AS Status
+			FROM orders 
+			WHERE id=@Id";
+			return _connection.QuerySingleOrDefault<Order>(sql, new { Id = orderId.Id });
+		}
+		
+		public List<Order> GetByCustomerId(CustomerId customerId)
+		{
+			var sql = @"
+			SELECT id, 
+			customer_id AS CustomerId, 
+			offer_id AS OfferId, 
+			quantity AS Quantity, 
+			status AS Status
+			FROM orders 
+			WHERE customer_id=@Id";
+			return _connection.Query<Order>(sql, new { Id = customerId.Id }).ToList();
+		}
+		
+		public Order Update(Order order)
+		{
+			var sql = @"
+			UPDATE orders
+			SET quantity=@Quantity, 
+			status=@Status
+			WHERE id=@Id";
+			var rows = _connection.Execute(sql, order);
+			if (rows == 0)
+			throw new RepositoryException($"Order with id {order.Id} not found");
+			return order;
+		}
+		
+		public List<OrderDetailsDto> GetOrderDetailsByCustomerId(CustomerId customerId)
+		{
+			var sql = @"
+			SELECT 
+			o.id AS OrderId,
+			o.status AS Status,
+			o.quantity AS Quantity,
+			
+			p.id AS ProductId,
+			p.name AS ProductName,
+			p.description AS ProductDescription,
+			
+			ofr.id AS OfferId,
+			ofr.price AS OfferPrice,
+			ofr.quantity AS OfferQuantity,
+			
+			s.id AS StoreId,
+			s.name AS StoreName,
+			
+			r.id AS ReviewId,
+			r.rating AS Rating,
+			r.review_text AS ReviewText
+			
+			FROM orders o
+			JOIN offers ofr ON o.offer_id = ofr.id
+			JOIN products p ON ofr.product_id = p.id
+			JOIN stores s ON ofr.store_id = s.id
+			LEFT JOIN reviews r ON o.id = r.order_id
+			WHERE o.customer_id = @CustomerId";
+			return _connection.Query<OrderDetailsDto>(sql, new { CustomerId = customerId.Id }).ToList();
+		}
+	}
+\end{lstlisting}
+
+% ---------------- ProductRepository ----------------
+\begin{lstlisting}[caption={ProductRepository}, label={lst:ProductRepository}]
+	public class ProductRepository : IProductRepository
+	{
+		private readonly NpgsqlConnection _connection;
+		
+		public ProductRepository(DapperContext context)
+		{
+			_connection = context.Connection;
+		}
+		
+		public Product Create(Product product)
+		{
+			var sql = @"
+			INSERT INTO products (id, name, category, description, rating_count, avg_rating)
+			VALUES (@Id, @Name, @Category, @Description, @RatingCount, @AvgRating)";
+			_connection.Execute(sql, product);
+			return product;
+		}
+		
+		public Product? GetById(ProductId productId)
+		{
+			var sql = @"
+			SELECT id, 
+			name AS Name, 
+			category AS Category, 
+			description AS Description, 
+			rating_count AS RatingCount, 
+			avg_rating AS AvgRating
+			FROM products 
+			WHERE id=@Id";
+			return _connection.QuerySingleOrDefault<Product>(sql, new { Id = productId.Id });
+		}
+		
+		public List<Product> GetByName(string name)
+		{
+			var sql = @"
+			SELECT id, 
+			name AS Name, 
+			category AS Category, 
+			description AS Description, 
+			rating_count AS RatingCount, 
+			avg_rating AS AvgRating
+			FROM products 
+			WHERE name ILIKE @Name";
+			return _connection.Query<Product>(sql, new { Name = $"%{name}%" }).ToList();
+		}
+		
+		public Product Update(Product product)
+		{
+			var sql = @"
+			UPDATE products
+			SET name=@Name, 
+			category=@Category, 
+			description=@Description, 
+			rating_count=@RatingCount, 
+			avg_rating=@AvgRating
+			WHERE id=@Id";
+			var rows = _connection.Execute(sql, product);
+			if (rows == 0)
+			throw new RepositoryException($"Product with id {product.Id} not found");
+			return product;
+		}
+	}
+\end{lstlisting}
+
+% ---------------- ReviewRepository ----------------
+\begin{lstlisting}[caption={ReviewRepository}, label={lst:ReviewRepository}]
+	public class ReviewRepository : IReviewRepository
+	{
+		private readonly NpgsqlConnection _connection;
+		
+		public ReviewRepository(DapperContext context)
+		{
+			_connection = context.Connection;
+		}
+		
+		public Review Create(Review review)
+		{
+			var sql = @"
+			INSERT INTO reviews (id, customer_id, order_id, rating, review_text)
+			VALUES (@Id, @CustomerId, @OrderId, @Rating, @ReviewText)";
+			_connection.Execute(sql, review);
+			return review;
+		}
+		
+		public Review? GetById(ReviewId reviewId)
+		{
+			var sql = @"
+			SELECT id,
+			customer_id AS CustomerId,
+			order_id AS OrderId,
+			rating AS Rating,
+			review_text AS ReviewText
+			FROM reviews
+			WHERE id = @Id";
+			return _connection.QuerySingleOrDefault<Review>(sql, new { Id = reviewId.Id });
+		}
+		
+		public List<Review> GetByCustomerId(CustomerId customerId)
+		{
+			var sql = @"
+			SELECT id,
+			customer_id AS CustomerId,
+			order_id AS OrderId,
+			rating AS Rating,
+			review_text AS ReviewText
+			FROM reviews
+			WHERE customer_id = @CustomerId";
+			return _connection.Query<Review>(sql, new { CustomerId = customerId.Id }).ToList();
+		}
+		
+		public Review? GetByOrderId(OrderId orderId)
+		{
+			var sql = @"
+			SELECT id,
+			customer_id AS CustomerId,
+			order_id AS OrderId,
+			rating AS Rating,
+			review_text AS ReviewText
+			FROM reviews
+			WHERE order_id = @OrderId";
+			return _connection.QuerySingleOrDefault<Review>(sql, new { OrderId = orderId.Id });
+		}
+		
+		public Review? DeleteById(ReviewId reviewId)
+		{
+			var review = GetById(reviewId);
+			if (review == null) return null;
+			var sql = "DELETE FROM reviews WHERE id=@Id";
+			_connection.Execute(sql, new { Id = reviewId.Id });
+			return review;
+		}
+	}
+\end{lstlisting}
+
+% ---------------- SellerRepository ----------------
+\begin{lstlisting}[caption={SellerRepository}, label={lst:SellerRepository}]
+	public class SellerRepository : ISellerRepository
+	{
+		private readonly NpgsqlConnection _connection;
+		
+		public SellerRepository(DapperContext context)
+		{
+			_connection = context.Connection;
+		}
+		
+		public Seller Create(Seller seller)
+		{
+			var sql = @"
+			INSERT INTO sellers (id, first_name, last_name, phone, email, birth_date)
+			VALUES (@Id, @FirstName, @LastName, @Phone, @Email, @BirthDate)";
+			_connection.Execute(sql, seller);
+			return seller;
+		}
+		
+		public Seller? GetById(SellerId sellerId)
+		{
+			var sql = @"
+			SELECT id, 
+			first_name AS FirstName, 
+			last_name AS LastName, 
+			phone AS Phone, 
+			email AS Email,
+			birth_date AS BirthDate
+			FROM sellers 
+			WHERE id=@Id";
+			return _connection.QuerySingleOrDefault<Seller>(sql, new { Id = sellerId.Id });
+		}
+		
+		public Seller? GetByEmail(string email)
+		{
+			var sql = @"
+			SELECT id,  
+			first_name AS FirstName, 
+			last_name AS LastName, 
+			phone AS Phone, 
+			email AS Email,
+			birth_date AS BirthDate
+			FROM sellers 
+			WHERE email=@email";
+			return _connection.QuerySingleOrDefault<Seller>(sql, new { email });
+		}
+		
+		public Seller Update(Seller seller)
+		{
+			var sql = @"
+			UPDATE sellers
+			SET first_name=@FirstName, 
+			last_name=@LastName, 
+			phone=@Phone, 
+			email=@Email, 
+			birth_date=@BirthDate
+			WHERE id=@Id";
+			var rows = _connection.Execute(sql, seller);
+			if (rows == 0)
+			throw new RepositoryException($"Seller with id {seller.Id} not found");
+			return seller;
+		}
+	}
+\end{lstlisting}
+
+% ---------------- StoreRepository ----------------
+\begin{lstlisting}[caption={StoreRepository}, label={lst:StoreRepository}]
+    public class StoreRepository : IStoreRepository
+	{
+		private readonly NpgsqlConnection _connection;
+		
+		public StoreRepository(DapperContext context)
+		{
+			_connection = context.Connection;
+		}
+		
+		public Store Create(Store store)
+		{
+			var sql = @"
+			INSERT INTO stores (id, owner_seller_id, name, ogrn, rating_count, avg_rating)
+			VALUES (@Id, @OwnerSellerId, @Name, @Ogrn, @RatingCount, @AvgRating)";
+			_connection.Execute(sql, store);
+			return store;
+		}
+		
+		public Store? GetById(StoreId storeId)
+		{
+			var sql = @"
+			SELECT id, 
+			owner_seller_id AS OwnerSellerId, 
+			name AS Name, 
+			ogrn AS Ogrn, 
+			rating_count AS RatingCount, 
+			avg_rating AS AvgRating
+			FROM stores 
+			WHERE id=@Id";
+			return _connection.QuerySingleOrDefault<Store>(sql, new { Id = storeId.Id });
+		}
+		
+		public List<Store> GetBySellerId(SellerId sellerId)
+		{
+			var sql = @"
+			SELECT id,
+			owner_seller_id AS OwnerSellerId, 
+			name AS Name, 
+			ogrn AS Ogrn, 
+			rating_count AS RatingCount, 
+			avg_rating AS AvgRating
+			FROM stores
+			WHERE owner_seller_id = @SellerId";
+			return _connection.Query<Store>(sql, new { SellerId = sellerId.Id }).ToList();
+		}
+		
+		public Store Update(Store store)
+		{
+			var sql = @"
+			UPDATE stores
+			SET name=@Name, 
+			ogrn=@Ogrn, 
+			rating_count=@RatingCount, 
+			avg_rating=@AvgRating
+			WHERE id=@Id";
+			var rows = _connection.Execute(sql, store);
+			if (rows == 0)
+			throw new RepositoryException($"Store with id {store.Id} not found");
+			return store;
+		}
+	}
+\end{lstlisting}
+
+% ---------------- DapperContext ----------------
+\begin{lstlisting}[caption={DapperContext}, label={lst:DapperContext}]
+	public class DapperContext : IDisposable
+	{
+		private readonly string _connectionString;
+		private readonly NpgsqlConnection _connection;
+		
+		public DapperContext(string connectionString)
+		{
+			_connectionString = connectionString;
+			_connection = new NpgsqlConnection(_connectionString);
+			_connection.Open();
+		}
+		
+		public NpgsqlConnection Connection => _connection;
+		
+		public void Dispose()
+		{
+			_connection.Close();
+			_connection.Dispose();
+		}
+	}
+\end{lstlisting}
+
+\clearpage
+
+\section{Тестирование}
+
+В таблицах~\ref{tab:customer_tests}-\ref{tab:repository_tests} приведены описание тестов и результаты тестирования.
+
+	
+\begin{table}[h!]
+	\centering
+	\caption{Тесты сервиса клиентов}
+	\label{tab:customer_tests}
+	\begin{tabular}{|c|p{5.3cm}|p{5cm}|p{5cm}|}
+		\hline
+		№ & Описание теста & Ожидаемый результат & Полученный результат \\
+		\hline
+		1 & Создание клиента & Клиент успешно создается в репозитории & Клиент создан, FirstName = Ivan, LastName = Ivanov \\
+		\hline
+		2 & Получение клиента по Id & Возвращается существующий клиент & Клиент успешно возвращен \\
+		\hline
+		3 & Получение несуществующего клиента по Id & Бросается исключение IdNotFoundException & Исключение IdNotFoundException вызвано \\
+		\hline
+		4 & Начисление баллов клиенту & Баллы клиента увеличиваются на указанное значение & Баллы увеличены, Points = 15 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\caption{Тесты сервиса избранного}
+	\label{tab:favorite_tests}
+	\begin{tabular}{|c|p{5.3cm}|p{5cm}|p{5cm}|}
+		\hline
+		№ & Описание теста & Ожидаемый результат & Полученный результат \\
+		\hline
+		1 & Создание избранного & Объект добавлен в репозиторий & Создано избранное, CustomerId и ProductId совпадают \\
+		\hline
+		2 & Получение избранного по Id & Возвращается существующий объект & Объект успешно возвращен \\
+		\hline
+		3 & Получение несуществующего объекта & Бросается IdNotFoundException & Исключение вызвано \\
+		\hline
+		4 & Получение избранного по Id клиента & Возвращается список объектов этого клиента & Список содержит 2 объекта с правильным CustomerId \\
+		\hline
+		5 & Удаление существующего объекта & Объект удален и возвращен & Объект успешно удален \\
+		\hline
+		6 & Удаление несуществующего объекта & Бросается IdNotFoundException & Исключение вызвано \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\caption{Тесты сервиса предложений (OfferService)}
+	\label{tab:offer_tests}
+	\begin{tabular}{|c|p{5.3cm}|p{5cm}|p{5cm}|}
+		\hline
+		№ & Описание теста & Ожидаемый результат & Полученный результат \\
+		\hline
+		1 & Создание предложения & Предложение добавлено в репозиторий & Предложение создано с правильными ProductId, StoreId, Price, Quantity \\
+		\hline
+		2 & Получение существующего предложения по Id & Предложение возвращается & Предложение успешно возвращено \\
+		\hline
+		3 & Получение несуществующего предложения & Бросается IdNotFoundException & Исключение вызвано \\
+		\hline
+		4 & Получение предложений по ProductId & Возвращается список предложений & Список содержит 2 предложения с верным ProductId \\
+		\hline
+		5 & Получение предложений по StoreId & Возвращается список предложений & Список содержит 2 предложения с верным StoreId \\
+		\hline
+		6 & Обновление цены & Цена обновляется & Цена обновлена на 99 \\
+		\hline
+		7 & Обновление количества & Количество обновляется & Количество обновлено на 42 \\
+		\hline
+		8 & Обновление времени доставки & Время доставки обновляется & Время доставки обновлено на 7 \\
+		\hline
+		9 & Увеличение количества & Количество увеличивается & Количество увеличено на 3 \\
+		\hline
+		10 & Уменьшение количества & Количество уменьшается & Количество уменьшено на 3 \\
+		\hline
+		11 & Удаление существующего предложения & Предложение удалено и возвращено & Предложение успешно удалено \\
+		\hline
+		12 & Удаление несуществующего предложения & Бросается IdNotFoundException & Исключение вызвано \\
+		\hline
+	\end{tabular}
+\end{table}
+
+% ------------------ OrderService ------------------
+\begin{table}[h!]
+	\centering
+	\caption{Тесты сервиса заказов (OrderService)}
+	\label{tab:order_tests}
+	\begin{tabular}{|c|p{5.3cm}|p{5cm}|p{5cm}|}
+		\hline
+		№ & Описание теста & Ожидаемый результат & Полученный результат \\
+		\hline
+		1 & Создание заказа & Заказ успешно добавлен & Заказ создан с правильными CustomerId, ProductId и Status \\
+		\hline
+		2 & Получение заказа по Id & Возвращается существующий заказ & Заказ успешно возвращен \\
+		\hline
+		3 & Получение несуществующего заказа & Бросается IdNotFoundException & Исключение вызвано \\
+		\hline
+		4 & Обновление статуса заказа & Статус заказа изменен & Статус изменен на 'PAID' \\
+		\hline
+		5 & Удаление заказа & Заказ удален и возвращен & Заказ успешно удален \\
+		\hline
+	\end{tabular}
+\end{table}
+
+% ------------------ PaymentUseCase ------------------
+\begin{table}[h!]
+	\centering
+	\caption{Тесты сервиса платежей (PaymentUseCase)}
+	\label{tab:payment_tests}
+	\begin{tabular}{|c|p{5.3cm}|p{5cm}|p{5cm}|}
+		\hline
+		№ & Описание теста & Ожидаемый результат & Полученный результат \\
+		\hline
+		1 & Создание платежа & Платеж успешно добавлен & Платеж создан с правильной суммой и OrderId \\
+		\hline
+		2 & Получение платежа по Id & Возвращается существующий платеж & Платеж успешно возвращен \\
+		\hline
+		3 & Попытка оплаты несуществующего заказа & Бросается IdNotFoundException & Исключение вызвано \\
+		\hline
+		4 & Обновление статуса платежа & Статус платежа изменен & Статус изменен на 'COMPLETED' \\
+		\hline
+	\end{tabular}
+\end{table}
+
+% ------------------ ProductService ------------------
+\begin{table}[h!]
+	\centering
+	\caption{Тесты сервиса продуктов (ProductService)}
+	\label{tab:product_tests}
+	\begin{tabular}{|c|p{5.3cm}|p{5cm}|p{5cm}|}
+		\hline
+		№ & Описание теста & Ожидаемый результат & Полученный результат \\
+		\hline
+		1 & Создание продукта & Продукт добавлен в репозиторий & Продукт создан с правильным названием и категорией \\
+		\hline
+		2 & Получение продукта по Id & Возвращается существующий продукт & Продукт успешно возвращен \\
+		\hline
+		3 & Получение несуществующего продукта & Бросается IdNotFoundException & Исключение вызвано \\
+		\hline
+		4 & Обновление названия продукта & Название продукта изменено & Название изменено на 'New Product Name' \\
+		\hline
+		5 & Обновление категории продукта & Категория продукта изменена & Категория изменена на 'Electronics' \\
+		\hline
+		6 & Удаление продукта & Продукт удален и возвращен & Продукт успешно удален \\
+		\hline
+	\end{tabular}
+\end{table}
+
+% ------------------ RecSysUseCase ------------------
+\begin{table}[h!]
+	\centering
+	\caption{Тесты сервиса рекомендаций (RecSysUseCase)}
+	\label{tab:recsys_tests}
+	\begin{tabular}{|c|p{5.3cm}|p{5cm}|p{5cm}|}
+		\hline
+		№ & Описание теста & Ожидаемый результат & Полученный результат \\
+		\hline
+		1 & Получение рекомендаций для клиента & Возвращается список рекомендуемых продуктов & Список содержит 5 продуктов, соответствующих интересам клиента \\
+		\hline
+		2 & Попытка получения рекомендаций для несуществующего клиента & Бросается IdNotFoundException & Исключение вызвано \\
+		\hline
+	\end{tabular}
+\end{table}
+
+% ------------------ SellerService ------------------
+\begin{table}[h!]
+	\centering
+	\caption{Тесты сервиса продавцов (SellerService)}
+	\label{tab:seller_tests}
+	\begin{tabular}{|c|p{5.3cm}|p{5cm}|p{5cm}|}
+		\hline
+		№ & Описание теста & Ожидаемый результат & Полученный результат \\
+		\hline
+		1 & Создание продавца & Продавец успешно добавлен & Продавец создан с правильным Name и StoreId \\
+		\hline
+		2 & Получение продавца по Id & Возвращается существующий продавец & Продавец успешно возвращен \\
+		\hline
+		3 & Обновление информации о продавце & Информация обновлена & Имя и контакты изменены \\
+		\hline
+		4 & Удаление продавца & Продавец удален & Продавец успешно удален \\
+		\hline
+	\end{tabular}
+\end{table}
+
+% ------------------ StoreService ------------------
+\begin{table}[h!]
+	\centering
+	\caption{Тесты сервиса магазинов (StoreService)}
+	\label{tab:store_tests}
+	\begin{tabular}{|c|p{5.3cm}|p{5cm}|p{5cm}|}
+		\hline
+		№ & Описание теста & Ожидаемый результат & Полученный результат \\
+		\hline
+		1 & Создание магазина & Магазин успешно добавлен & Магазин создан с правильным Name и Address \\
+		\hline
+		2 & Получение магазина по Id & Возвращается существующий магазин & Магазин успешно возвращен \\
+		\hline
+		3 & Обновление информации о магазине & Информация обновлена & Адрес и контакты изменены \\
+		\hline
+		4 & Удаление магазина & Магазин удален & Магазин успешно удален \\
+		\hline
+	\end{tabular}
+\end{table}
+
+% ------------------ Repository тесты ------------------
+\begin{table}[h!]
+	\centering
+	\caption{Тесты репозиториев базы данных}
+	\label{tab:repository_tests}
+	\begin{tabular}{|c|p{5.3cm}|p{5cm}|p{5cm}|}
+		\hline
+		№ & Описание теста & Ожидаемый результат & Полученный результат \\
+		\hline
+		1 & Проверка сохранения сущности в репозитории & Сущность добавлена & Сущность присутствует в базе \\
+		\hline
+		2 & Получение сущности по Id & Сущность возвращена & Сущность успешно получена \\
+		\hline
+		3 & Попытка получения несуществующей сущности & Бросается исключение & Исключение вызвано \\
+		\hline
+		4 & Обновление сущности & Сущность обновлена & Данные изменены корректно \\
+		\hline
+		5 & Удаление сущности & Сущность удалена & Сущность удалена из базы \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\clearpage
+
+\section*{Вывод}
+
+В данном разделе был проведен выбор средств реализации приложения, языка программирования, системы управления базой данных. Были приведены архитектура приложения, листинги кода для создания таблиц базы данных и листинги взаимодействия приложения с базой данных. 
+
+\clearpage
