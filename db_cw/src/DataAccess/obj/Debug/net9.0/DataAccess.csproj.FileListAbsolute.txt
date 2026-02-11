@@ -1,0 +1,15 @@
+/Users/rf9/swd/src/DataAccess/bin/Debug/net9.0/DataAccess.deps.json
+/Users/rf9/swd/src/DataAccess/bin/Debug/net9.0/DataAccess.dll
+/Users/rf9/swd/src/DataAccess/bin/Debug/net9.0/DataAccess.pdb
+/Users/rf9/swd/src/DataAccess/bin/Debug/net9.0/Domain.dll
+/Users/rf9/swd/src/DataAccess/bin/Debug/net9.0/Domain.pdb
+/Users/rf9/swd/src/DataAccess/obj/Debug/net9.0/DataAccess.csproj.AssemblyReference.cache
+/Users/rf9/swd/src/DataAccess/obj/Debug/net9.0/DataAccess.GeneratedMSBuildEditorConfig.editorconfig
+/Users/rf9/swd/src/DataAccess/obj/Debug/net9.0/DataAccess.AssemblyInfoInputs.cache
+/Users/rf9/swd/src/DataAccess/obj/Debug/net9.0/DataAccess.AssemblyInfo.cs
+/Users/rf9/swd/src/DataAccess/obj/Debug/net9.0/DataAccess.csproj.CoreCompileInputs.cache
+/Users/rf9/swd/src/DataAccess/obj/Debug/net9.0/DataAccess.csproj.Up2Date
+/Users/rf9/swd/src/DataAccess/obj/Debug/net9.0/DataAccess.dll
+/Users/rf9/swd/src/DataAccess/obj/Debug/net9.0/refint/DataAccess.dll
+/Users/rf9/swd/src/DataAccess/obj/Debug/net9.0/DataAccess.pdb
+/Users/rf9/swd/src/DataAccess/obj/Debug/net9.0/ref/DataAccess.dll

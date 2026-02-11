@@ -1,0 +1,280 @@
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+%\usepackage[14pt]{extsizes}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools} 
+\usepackage{pgfplots}
+\usepackage{filecontents}
+\usepackage{float}
+\usepackage{indentfirst}
+\usepackage{eucal}
+\usepackage{enumitem}
+\usepackage{svg}
+%s\documentclass[openany]{book}
+\frenchspacing
+
+\usepackage{indentfirst} % Красная строка
+
+\usetikzlibrary{datavisualization}
+\usetikzlibrary{datavisualization.formats.functions}
+
+\usepackage{amsmath}
+\graphicspath{{images/}}
+
+
+% Для листинга кода:
+\lstset{ %
+	language=c,                 % выбор языка для подсветки (здесь это С)
+	basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+	numbers=left,               % где поставить нумерацию строк (слева\справа)
+	numberstyle=\tiny,           % размер шрифта для номеров строк
+	stepnumber=1,                   % размер шага между двумя номерами строк
+	numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+	showspaces=false,            % показывать или нет пробелы специальными отступами
+	showstringspaces=false,      % показывать или нет пробелы в строках
+	showtabs=false,             % показывать или нет табуляцию в строках
+	frame=single,              % рисовать рамку вокруг кода
+	tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+	captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+	breaklines=true,           % автоматически переносить строки (да\нет)
+	breakatwhitespace=false, % переносить строки только если есть пробел
+	escapeinside={\#*}{*)}   % если нужно добавить комментарии в коде
+}
+
+
+\usepackage[left=2cm,right=2cm, top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+% Для измененных титулов глав:
+\usepackage{titlesec, blindtext, color} % подключаем нужные пакеты
+\definecolor{gray75}{gray}{0.25} % определяем цвет
+\newcommand{\hsp}{\hspace{20pt}} % длина линии в 20pt
+% titleformat определяет стиль
+\titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter\hsp\textcolor{gray75}{}\hsp}{0pt}{\Huge\bfseries}
+
+
+% plot
+\usepackage{pgfplots}
+\usepackage{filecontents}
+\usetikzlibrary{datavisualization}
+\usetikzlibrary{datavisualization.formats.functions}
+
+\begin{document}
+	
+	\include{title}
+	
+	\chapter{Задание}
+	
+	\section{Цель работы}
+	
+	\textbf{Цель работы:} построение доверительных интервалов для математического
+	ожидания и дисперсии нормальной случайной величины.
+	
+	\section{Содержание работы}
+	
+	\begin{enumerate}
+		\item Для выборки объема $n$ из генеральной совокупности $X$ реализовать в
+		виде программы на ЭВМ
+		\begin{enumerate}
+			\item вычисление точечных оценок $\hat \mu(\vec x_n)$ и $S^2(\vec x_n)$ математического ожидания $\mathrm{M}X$ и дисперсии $\mathrm{D}X$ соответственно;
+			\item вычисление нижней и верхней границ $\underline \mu (\vec
+			x_n)$, $\overline \mu (\vec x_n)$ для \mbox{$\gamma$-доверительного} интервала для математического ожидания $\mathrm{M}X$;
+			\item вычисление нижней и верхней границ $\underline \sigma^2 (\vec x_n)$, $\overline \sigma^2 (\vec x_n)$ для
+			\mbox{$\gamma$-доверительного} интервала для дисперсии $\mathrm{D}X$.
+		\end{enumerate}
+		\item вычислить $\hat \mu$ и $S^2$ для выборки из индивидуального варианта;
+		\item для заданного пользователем уровня доверия $\gamma$ и $N$ --- объема выборки индивидуального варианта:
+		\begin{enumerate}
+			\item на координатной плоскости $Oyn$ построить прямую $y=\hat \mu (\vec x_N)$, также графики функций $y=\hat \mu (\vec x_n)$, $y=\underline \mu (\vec x_n)$ и $y=\overline \mu (\vec x_n)$ как функций объема $n$ выборки, где $n$ изменяется от $1$ до $N$.
+			\item на другой координатной плоскости $Ozn$ построить прямую \mbox{$z=S^2 (\vec x_N)$}, также графики функций $z=S^2 (\vec x_n)$, $z=\underline \sigma^2 (\vec x_n)$ и \mbox{$z=\overline \sigma^2 (\vec x_n)$} как функций объема $n$ выборки, где $n$ изменяется от $1$ до $N$.
+		\end{enumerate}
+		
+	\end{enumerate}
+	
+	\section{Содержание отчета}
+	
+	\begin{enumerate}
+		\item основные формулы и определения;
+		\item текст программы;
+		\item результаты расчетов для выборки из индивидуального варианта.
+	\end{enumerate}
+	
+	\chapter{Теоретическая часть}
+	
+	\section{Определение $\gamma$-доверительного интервала для значения параметра распределения случайной величины}
+	
+	Пусть $X$ --- случайная величина, закон распределения которой известен с
+	точностью до неизвестного параметра $\theta$.
+	
+	\textbf{Опр.} Интервальной оценкой c уровнем доверия $\gamma \in (0, 1)$ параметра $\theta$ называется пара статистик $\underline \theta (\vec X)$ и $\overline \theta (\vec X)$ таких, что выполняется равенство:
+	
+	$$ 
+	P\{ \underline \theta (\vec X) < \theta  < \overline \theta (\vec X)\} = \gamma.
+	$$
+	
+	\textbf{Опр.} Доверительным интервалом с уровнем доверия $\gamma$ для параметра $\theta$ называется интервал $(\underline \theta (\vec x), \overline \theta (\vec x))$, отвечающий выборочным значениям статистики $\underline \theta$, $\overline \theta$, задающих оценку уровня $\gamma$ для $\theta$.
+	
+	\section{Формулы для вычисления границ $\gamma$-доверительного интервала для математического ожидания и дисперсии нормальной случайно величины}
+	
+	Пусть $X \sim N(\mu, \sigma^2)$, где $\mu$ и $\sigma^2$ --- неизвестны.
+	
+	Тогда для построения $\gamma$-доверительного интервала для $\mu$ используется
+	центральная статистика
+	
+	$$
+	\label{eq:T_1}
+	T(\vec X, \mu) = \frac{\mu - \overline X}{S(\vec X)} \sqrt n \sim St(n - 1),
+	$$
+	
+	\noindentи границы $\gamma$-доверительного интервала для $\mu$ вычисляются по
+	формулам:
+	
+	$$
+	\label{eq:mu_lower}
+	\underline \mu (\vec X) = \overline X - \frac{S(\vec X)t^{(n-1)}_{\frac{1 +
+				\gamma}{2}}}{\sqrt n},
+	$$
+	
+	$$
+	\label{eq:mu_upper}
+	\overline \mu (\vec X) = \overline X + \frac{S(\vec X)t^{(n-1)}_{\frac{1 +
+				\gamma}{2}}}{\sqrt n},
+	$$
+	
+	
+	\noindentгде $\overline X = \frac{1}{n} \sum\limits_{i=1}^{n} X_i$, $S(\vec X) = \sqrt{\frac{1}{n-1} \sum\limits_{i=1}^{n} (X_i - \overline X)^2}$, $t_{\frac{1+\gamma}{2}}^{(n-1)}$ --- квантиль уровня $\frac{1+\gamma}{2}$ распределения Стьюдента с \mbox{$n-1$~степенями} свободы, $n$ --- объем выборки.
+	
+	Для построения $\gamma$-доверительного интервала для $\sigma^2$ используется
+	центральная статистика
+	
+	$$
+	\label{eq:T_2}
+	T(\vec X, \sigma^2) = \frac{(n-1)S^2(\vec X)}{\sigma^2} \sim \chi^2(n - 1),
+	$$
+	
+	\noindentи границы $\gamma$-доверительного интервала для $\sigma^2$ вычисляются по
+	формулам:
+	
+	$$
+	\label{eq:S_quad_lower}
+	\underline \sigma^2 (\vec X) = \frac{(n-1)S^2(\vec X)}{h_{\frac{1+\gamma}{2}}^{(n-1)}},
+	$$
+	
+	$$
+	\label{eq:S_quad_upper}
+	\overline \sigma^2 (\vec X) = \frac{(n-1)S^2(\vec X)}{h_{\frac{1-\gamma}{2}}^{(n-1)}},
+	$$
+	
+	
+	\noindentгде $n$ --- объем выборки, $S^2(\vec X) = \frac{1}{n-1} \sum\limits_{i=1}^{n} (X_i - \overline X)^2$, $h_{\frac{1+\gamma}{2}}^{(n-1)}$ и $h_{\frac{1-\gamma}{2}}^{(n-1)}$ --- квантили уровня $\frac{1+\gamma}{2}$ и $\frac{1-\gamma}{2}$ соответственно распределения хи-квадрат с \mbox{$n-1$~степенями} свободы.
+	
+	\chapter{Практическая часть}
+	%X = [-2.79,-3.01,-4.07,-2.85,-2.43,-3.20,-3.72,-4.27,-5.48,-2.38,
+	%-4.69,-4.34,-5.08,-5.01,-4.08,-4.20,-4.74,-1.88,-3.25,-2.78,
+	%-3.56,-3.54,-3.79,-3.18,-5.08,-4.30,-2.86,-2.45,-3.08,-3.22,
+	%-2.76,-3.20,-3.33,-4.91,-4.06,-3.81,-3.96,-3.65,-3.77,-4.60,
+	%-5.21,-2.67,-1.95,-2.43,-1.73,-2.50,-3.96,-3.75,-2.70,-4.26,
+	%-3.42,-4.07,-4.74,-3.00,-4.37,-5.42,-5.00,-4.08,-2.46,-4.33,
+	%-4.08,-3.72,-4.09,-2.96,-3.71,-1.51,-3.70,-6.48,-4.26,-4.39,
+	%-3.16,-4.63,-2.66,-2.22,-4.79,-2.46,-3.69,-3.35,-2.32,-4.17,
+	%-3.85,-4.93,-2.05,-3.15,-3.49,-5.70,-2.53,-3.85,-4.32,-3.37,
+	%-3.98,-3.74,-5.28,-2.56,-3.21,-3.10,-3.78,-3.36,-3.32,-2.59,
+	%-2.45,-3.34,-3.20,-4.14,-4.00,-4.79,-4.02,-4.58,-4.45,-3.69,
+	%-4.53,-3.98,-4.51,-4.44,-3.78,-4.24,-4.00,-2.46,-2.58,-4.04];
+	\begin{lstlisting}[language=Matlab]
+	mu = mean(x); % -3.6762
+	S_quad = var(x); % 0.8664
+	display(mu);
+	display(S_quad);
+	
+	gamma = 0.9;
+	quant_St = tinv((1 + gamma) / 2, n - 1); 
+	mu_lower = mu - (sqrt(S_quad) * quant_St / sqrt(n));
+	mu_upper = mu + (sqrt(S_quad) * quant_St / sqrt(n));
+	display(mu_lower);
+	display(mu_upper);
+	display(mu_lower, mu_upper);
+	
+	quant_chi1 = chi2inv((1 - gamma) / 2, n - 1);
+	quant_chi2 = chi2inv((1 + gamma) / 2, n - 1);
+	sigma_lower = S_quad * (n - 1) / quant_chi2;
+	sigma_upper = S_quad * (n - 1) / quant_chi1;
+	display(sigma_lower);
+	display(sigma_upper);
+	display(sigma_lower, sigma_upper);
+	
+	mu_N = zeros(n, 1) + mu;
+	mu_n = zeros(n, 1);
+	mu_lower_n = zeros(n, 1);
+	mu_upper_n = zeros(n, 1);
+	
+	S_quad_N = zeros(n, 1) + S_quad;
+	S_quad_n = zeros(n, 1);
+	S_quad_lower_n = zeros(n, 1);
+	S_quad_upper_n = zeros(n, 1);
+	
+	for i = 1 : n
+	mu_n(i) = sum(x(1 : i)) / i;
+	S_quad_n(i) = sum((x(1 : i) - mu_n(i)) .^2) / (i - 1);
+	
+	quant_st_i = tinv((1 + gamma) / 2, i - 1);
+	
+	mu_lower_n(i) = mu_n(i) - (quant_st_i * sqrt(S_quad_n(i)) / sqrt(i));
+	mu_upper_n(i) = mu_n(i) + (quant_st_i * sqrt(S_quad_n(i)) / sqrt(i)); 
+	
+	quant_chi1_i = chi2inv((1 - gamma) / 2, i - 1);
+	quant_chi2_i = chi2inv((1 + gamma) / 2, i - 1);
+	
+	S_quad_lower_n(i) = S_quad_n(i) * (i - 1) / quant_chi2_i;
+	S_quad_upper_n(i) = S_quad_n(i) * (i - 1) / quant_chi1_i;
+	end
+	
+	a = 11;
+	figure();
+	hold on;
+	grid on;
+	xlabel("n");
+	ylabel('\mu');
+	plot((a : n), mu_N(a:n), 'r', LineWidth=1);
+	plot((a : n), mu_n(a:n), 'm--', LineWidth=1);
+	plot((a : n), mu_lower_n(a:n), 'b-o', MarkerIndices=1:5:length(mu_lower_n(a:n)), LineWidth=1);
+	plot((a : n), mu_upper_n(a:n), 'k-*', MarkerIndices=1:5:length(mu_lower_n(a:n)), LineWidth=1);
+	legend('\mu\^(x_N)', '\mu\^(x_n)', '\mu_{-}(x_n)', '\mu^{-}(x_n)');
+	
+	figure();
+	hold on;
+	grid on;
+	xlabel("n");
+	ylabel('\sigma');
+	plot((a : n), S_quad_N(a:n), 'r', LineWidth=1);
+	plot((a : n), S_quad_n(a:n), 'm--', LineWidth=1);
+	plot((a : n), S_quad_lower_n(a:n), 'b-o', MarkerIndices=1:5:length(S_quad_lower_n(a:n)), LineWidth=1);
+	plot((a : n), S_quad_upper_n(a:n), 'k-*', MarkerIndices=1:5:length(S_quad_upper_n(a:n)), LineWidth=1);
+	legend('S^2(x_N)', 'S^2(x_n)', '\sigma^2_{-}(x_n)', '\sigma^{2 -}(x_n)');
+	
+	\end{lstlisting}
+	
+	\chapter{Экспериментальная часть}
+	
+	\section{Результаты расчетов}
+	
+	Выборка: X=[-2.79,-3.01,-4.07,-2.85,-2.43,-3.20,-3.72,-4.27,-5.48,-2.38,-4.69,-4.34,-5.08,-5.01,\\-4.08,-4.20,-4.74,-1.88,-3.25,-2.78,-3.56,-3.54,-3.79,-3.18,-5.08,-4.30,-2.86,-2.45,-3.08,-3.22,-2.76,-3.20,\\-3.33,-4.91,-4.06,-3.81,-3.96,-3.65,-3.77,-4.60,-5.21,-2.67,-1.95,-2.43,-1.73,-2.50,-3.96,-3.75,-2.70,-4.26,\\-3.42,-4.07,-4.74,-3.00,-4.37,-5.42,-5.00,-4.08,-2.46,-4.33,-4.08,-3.72,-4.09,-2.96,-3.71,-1.51,-3.70,-6.48,\\-4.26,-4.39,-3.16,-4.63,-2.66,-2.22,-4.79,-2.46,-3.69,-3.35,-2.32,-4.17,-3.85,-4.93,-2.05,-3.15,-3.49,-5.70,\\-2.53,-3.85,-4.32,-3.37,-3.98,-3.74,-5.28,-2.56,-3.21,-3.10,-3.78,-3.36,-3.32,-2.59,-2.45,-3.34,-3.20,-4.14,\\-4.00,-4.79,-4.02,-4.58,-4.45,-3.69,-4.53,-3.98,-4.51,-4.44,-3.78,-4.24,-4.00,-2.46,-2.58,-4.04];
+	
+	
+		\begin{figure}[h]	
+		\centering
+		\includesvg[scale=0.9]{/Users/rf9/Documents/MS_lab2/images/21.svg}
+		\caption{Прямая $y=\hat \mu (\vec x_N)$ и графики функций $y=\hat \mu (\vec x_n)$, $y=\underline \mu (\vec x_n)$ и $y=\overline \mu (\vec x_n)$ как функций объема $n$ выборки, где $n$ изменяется от $1$ до $N$}
+		\label{plot1}
+	\end{figure}
+	
+	\begin{figure}[h]	
+		\centering
+		\includesvg[scale=0.9]{/Users/rf9/Documents/MS_lab2/images/11.svg}
+		\caption{Прямая \mbox{$z=S^2 (\vec x_N)$} и графики функций $z=S^2 (\vec x_n)$, $z=\underline \sigma^2 (\vec x_n)$ и \mbox{$z=\overline \sigma^2 (\vec x_n)$} как функций объема $n$ выборки, где $n$ изменяется от $1$ до $N$}
+		\label{plot2}
+	\end{figure}
+	
+	
+	
+\end{document}

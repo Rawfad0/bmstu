@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.6)  28 DEC 2024 09:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.6)  25 JAN 2025 17:39
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -2367,10 +2367,60 @@ Package hyperref Info: Link coloring OFF on input line 3.
 \@outlinefile=\write4
 \openout4 = `report.out'.
 
+
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./title.pdf): PDF inclusion:
+ found PDF version <1.7>, but at most version <1.5> allowed
+<title.pdf, id=138, 597.53635pt x 845.04686pt>
+File: title.pdf Graphic file (type pdf)
+<use title.pdf>
+Package pdftex.def Info: title.pdf  used on input line 5.
+(pdftex.def)             Requested size: 597.53488pt x 845.0448pt.
+
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./title.pdf): PDF inclusion:
+ found PDF version <1.7>, but at most version <1.5> allowed
+File: title.pdf Graphic file (type pdf)
+<use title.pdf>
+Package pdftex.def Info: title.pdf  used on input line 5.
+(pdftex.def)             Requested size: 597.53488pt x 845.0448pt.
+
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./title.pdf): PDF inclusion:
+ found PDF version <1.7>, but at most version <1.5> allowed
+
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ./title.pdf): PDF inclusion:
+ found PDF version <1.7>, but at most version <1.5> allowed
+<title.pdf, id=141, page=1, 597.53635pt x 845.04686pt>
+File: title.pdf Graphic file (type pdf)
+<use title.pdf, page 1>
+Package pdftex.def Info: title.pdf , page1 used on input line 5.
+(pdftex.def)             Requested size: 597.53488pt x 845.0448pt.
+File: title.pdf Graphic file (type pdf)
+<use title.pdf, page 1>
+Package pdftex.def Info: title.pdf , page1 used on input line 5.
+(pdftex.def)             Requested size: 597.56223pt x 845.08348pt.
+File: title.pdf Graphic file (type pdf)
+<use title.pdf, page 1>
+Package pdftex.def Info: title.pdf , page1 used on input line 5.
+(pdftex.def)             Requested size: 597.56223pt x 845.08348pt.
+File: title.pdf Graphic file (type pdf)
+<use title.pdf, page 1>
+Package pdftex.def Info: title.pdf , page1 used on input line 5.
+(pdftex.def)             Requested size: 597.56223pt x 845.08348pt.
+File: title.pdf Graphic file (type pdf)
+<use title.pdf, page 1>
+Package pdftex.def Info: title.pdf , page1 used on input line 5.
+(pdftex.def)             Requested size: 597.56223pt x 845.08348pt.
+[1
+
+
+ <./title.pdf>]
 LaTeX Font Info:    Font shape `T2A/Tempora-TLF/m/n' will be
-(Font)              scaled to size 35.83pt on input line 9.
+(Font)              scaled to size 35.83pt on input line 10.
 LaTeX Font Info:    Font shape `T2A/Tempora-TLF/b/n' will be
-(Font)              scaled to size 35.83pt on input line 9.
+(Font)              scaled to size 35.83pt on input line 10.
  (./report.toc
 LaTeX Font Info:    Font shape `T2A/Tempora-TLF/b/n' will be
 (Font)              scaled to size 14.4pt on input line 2.
@@ -2414,10 +2464,8 @@ LaTeX Font Info:    No file PUTempora-TLF.fd. on input line 2.
 LaTeX Font Warning: Font shape `PU/Tempora-TLF/m/up' undefined
 (Font)              using `PU/pdf/m/n' instead on input line 2.
 
-[4
-
-{/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
-al/texlive/2024/texmf-dist/fonts/enc/dvips/tempora/t2a-tempora.enc}])
+[4{/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/l
+ocal/texlive/2024/texmf-dist/fonts/enc/dvips/tempora/t2a-tempora.enc}])
 \tf@toc=\write5
 \openout5 = `report.toc'.
 
@@ -2462,7 +2510,7 @@ LaTeX Font Info:    Font shape `T2A/Tempora-TLF/b/n' will be
 Package svg Info: Last page of `./svg-inkscape/rt.drawio_svg-tex.pdf' is 1 on i
 nput line 31.
  (./svg-inkscape/rt.drawio_svg-tex.pdf_tex
-<./svg-inkscape/rt.drawio_svg-tex.pdf, id=240, page=1, 513.04172pt x 732.11015p
+<./svg-inkscape/rt.drawio_svg-tex.pdf, id=270, page=1, 513.04172pt x 732.11015p
 t>
 File: ./svg-inkscape/rt.drawio_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/rt.drawio_svg-tex.pdf, page 1>
@@ -2495,7 +2543,7 @@ Overfull \hbox (1.35619pt too wide) in paragraph at lines 9--10
 Package svg Info: Last page of `./svg-inkscape/uml.drawio_svg-tex.pdf' is 1 on 
 input line 18.
 (./svg-inkscape/uml.drawio_svg-tex.pdf_tex
-<./svg-inkscape/uml.drawio_svg-tex.pdf, id=355, page=1, 377.53546pt x 263.86078
+<./svg-inkscape/uml.drawio_svg-tex.pdf, id=385, page=1, 377.53546pt x 263.86078
 pt>
 File: ./svg-inkscape/uml.drawio_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/uml.drawio_svg-tex.pdf, page 1>
@@ -2523,7 +2571,7 @@ LaTeX Font Info:    Font shape `T2A/cmtt/bx/n' in size <12> not available
 
 [16{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t2a.en
 c}] [17] [18]
-</Users/rf9/PycharmProjects/cg_cw/report/images/menu.png, id=497, 1316.92pt x 7
+</Users/rf9/PycharmProjects/cg_cw/report/images/menu.png, id=527, 1316.92pt x 7
 66.865pt>
 File: /Users/rf9/PycharmProjects/cg_cw/report/images/menu.png Graphic file (typ
 e png)
@@ -2531,7 +2579,7 @@ e png)
 Package pdftex.def Info: /Users/rf9/PycharmProjects/cg_cw/report/images/menu.pn
 g  used on input line 211.
 (pdftex.def)             Requested size: 395.07906pt x 230.06128pt.
-</Users/rf9/PycharmProjects/cg_cw/report/images/menu1.png, id=500, 373.395pt x 
+</Users/rf9/PycharmProjects/cg_cw/report/images/menu1.png, id=530, 373.395pt x 
 577.15625pt>
 File: /Users/rf9/PycharmProjects/cg_cw/report/images/menu1.png Graphic file (ty
 pe png)
@@ -2544,7 +2592,7 @@ ng  used on input line 220.
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [19 </Users/rf9/PycharmProjects/cg_cw/report/images/menu.png>]
-</Users/rf9/PycharmProjects/cg_cw/report/images/menu2.png, id=511, 371.3875pt x
+</Users/rf9/PycharmProjects/cg_cw/report/images/menu2.png, id=541, 371.3875pt x
  575.14874pt>
 File: /Users/rf9/PycharmProjects/cg_cw/report/images/menu2.png Graphic file (ty
 pe png)
@@ -2552,7 +2600,7 @@ pe png)
 Package pdftex.def Info: /Users/rf9/PycharmProjects/cg_cw/report/images/menu2.p
 ng  used on input line 229.
 (pdftex.def)             Requested size: 111.4171pt x 172.54594pt.
-</Users/rf9/PycharmProjects/cg_cw/report/images/menu3.png, id=513, 373.395pt x 
+</Users/rf9/PycharmProjects/cg_cw/report/images/menu3.png, id=543, 373.395pt x 
 174.6525pt>
 File: /Users/rf9/PycharmProjects/cg_cw/report/images/menu3.png Graphic file (ty
 pe png)
@@ -2563,7 +2611,7 @@ ng  used on input line 238.
  [20 </Users/rf9/PycharmProjects/cg_cw/report/images/menu1.png> </Users/rf9/Pyc
 harmProjects/cg_cw/report/images/menu2.png> </Users/rf9/PycharmProjects/cg_cw/r
 eport/images/menu3.png>]
-</Users/rf9/PycharmProjects/cg_cw/report/images/ex4.png, id=523, 1316.92pt x 76
+</Users/rf9/PycharmProjects/cg_cw/report/images/ex4.png, id=553, 1316.92pt x 76
 6.865pt>
 File: /Users/rf9/PycharmProjects/cg_cw/report/images/ex4.png Graphic file (type
  png)
@@ -2571,7 +2619,7 @@ File: /Users/rf9/PycharmProjects/cg_cw/report/images/ex4.png Graphic file (type
 Package pdftex.def Info: /Users/rf9/PycharmProjects/cg_cw/report/images/ex4.png
   used on input line 252.
 (pdftex.def)             Requested size: 395.07906pt x 230.06128pt.
-</Users/rf9/PycharmProjects/cg_cw/report/images/ex6.png, id=524, 1316.92pt x 76
+</Users/rf9/PycharmProjects/cg_cw/report/images/ex6.png, id=554, 1316.92pt x 76
 6.865pt>
 File: /Users/rf9/PycharmProjects/cg_cw/report/images/ex6.png Graphic file (type
  png)
@@ -2600,7 +2648,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 Package svg Info: Last page of `./svg-inkscape/Figure_2_svg-tex.pdf' is 1 on in
 put line 143.
 (./svg-inkscape/Figure_2_svg-tex.pdf_tex
-<./svg-inkscape/Figure_2_svg-tex.pdf, id=538, page=1, 462.52798pt x 346.89601pt
+<./svg-inkscape/Figure_2_svg-tex.pdf, id=569, page=1, 462.52798pt x 346.89601pt
 >
 File: ./svg-inkscape/Figure_2_svg-tex.pdf Graphic file (type pdf)
 <use ./svg-inkscape/Figure_2_svg-tex.pdf, page 1>
@@ -2674,13 +2722,13 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 58444BEF3B5BAD8B6858F8CC77F899CC;7217.
  ) 
 Here is how much of TeX's memory you used:
- 43842 strings out of 474116
- 953066 string characters out of 5743683
+ 43855 strings out of 474116
+ 953324 string characters out of 5743683
  2223187 words of memory out of 5000000
- 65208 multiletter control sequences out of 15000+600000
+ 65220 multiletter control sequences out of 15000+600000
  596080 words of font info for 75 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 106i,14n,112p,1456b,1392s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 106i,17n,112p,1456b,1392s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/tempora/Tempora-Bold.p
 fb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/tempora/Tempora-Regul
 ar.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi1
@@ -2688,10 +2736,10 @@ ar.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi1
 pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.p
 fb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb
 >
-Output written on report.pdf (27 pages, 1685864 bytes).
+Output written on report.pdf (28 pages, 1780721 bytes).
 PDF statistics:
- 732 PDF objects out of 1000 (max. 8388607)
- 577 compressed objects within 6 object streams
- 175 named destinations out of 1000 (max. 500000)
- 337 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 762 PDF objects out of 1000 (max. 8388607)
+ 593 compressed objects within 6 object streams
+ 176 named destinations out of 1000 (max. 500000)
+ 357 words of extra memory for PDF output out of 10000 (max. 10000000)
 

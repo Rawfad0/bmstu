@@ -1,0 +1,161 @@
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{sverb}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{hyperref} 
+\usepackage{url}
+\usepackage{titlesec, blindtext, color}
+\usepackage{listings}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\graphicspath{{../}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{tabularx}
+\usepackage{subcaption}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{tikz}
+\usepackage[noend]{algpseudocode}
+\usepackage{float}
+\definecolor{gray75}{gray}{0.75}
+\definecolor{Blue}{HTML}{5D8AA8}
+\newcommand{\hsp}{\hspace{20pt}}
+
+\newcommand{\RomanNumeralCaps}[1]
+{\MakeUppercase{\romannumeral #1}}
+
+
+
+% Для листинга кода:
+\lstset{ %
+	language=c,                 % выбор языка для подсветки (здесь это С)
+	basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода             % где поставить нумерацию строк (слева\справа)
+	numberstyle=\tiny,           % размер шрифта для номеров строк
+	stepnumber=1, 
+	keywordstyle=\color{blue},% размер шага между двумя номерами строк
+	numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+	showspaces=false,            % показывать или нет пробелы специальными отступами
+	showstringspaces=false,      % показывать или нет пробелы в строках
+	showtabs=false,             % показывать или нет табуляцию в строках
+	frame=single,              % рисовать рамку вокруг кода
+	tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+	captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+	breaklines=true,           % автоматически переносить строки (да\нет)
+	breakatwhitespace=false, % переносить строки только если есть пробел
+	escapeinside={\#*}{*)}  % Стиль литералов
+}
+
+
+\titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter.\textcolor{gray75}\hsp}{0pt}{\Huge\bfseries}
+\newcommand{\specchapter}[1]{\chapter*{#1}\addcontentsline{toc}{chapter}{#1}}
+\newcommand{\specsection}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
+\newcommand{\specsubsection}[1]{\subsection*{#1}\addcontentsline{toc}{subsection}{#1}}
+
+% геометрия
+
+
+\setcounter{tocdepth}{4} % фикс переноса 
+\righthyphenmin = 2
+\tolerance = 2048
+
+
+\thispagestyle{empty}
+
+\geometry{pdftex, left = 3cm, right = 1cm, top = 2cm, bottom = 2cm}
+
+\begin{document}
+	
+	\thispagestyle{empty}
+	
+	
+	\noindent \begin{minipage}{0.15\textwidth}
+		\includegraphics[width=\linewidth]{images/b_logo}
+	\end{minipage}
+	\noindent\begin{minipage}{0.85\textwidth}\centering
+		\fontsize{12pt}{12pt}\selectfont
+		\textbf{Министерство науки и высшего образования Российской Федерации}\\
+		\textbf{Федеральное государственное автономное образовательное учреждение высшего образования}\\
+		\textbf{«Московский государственный технический университет имени Н.Э.~Баумана}\\
+		\textbf{(национальный исследовательский университет)»}\\
+		\textbf{(МГТУ им. Н.Э.~Баумана)}
+	\end{minipage}
+	
+	\noindent\rule{\linewidth}{3pt}
+	\newline\newline
+	\noindent ФАКУЛЬТЕТ $\underline{\text{«Информатика и системы управления»}}$ \newline\newline
+	\noindent КАФЕДРА $\underline{\text{«Программное обеспечение ЭВМ и информационные технологии»}}$
+	
+	\vspace{1cm}
+	
+	\begin{center}
+		\noindent\begin{minipage}{1.3\textwidth}\centering
+			\Large\textbf{Лабораторная работа № 1}\newline
+			\textbf{по дисциплине <<Моделирование>>}\newline\newline
+		\end{minipage}
+	\end{center}
+	
+	\noindent\textbf{Тема} $\underline{\text{Оценка случайности сгенерированных последовательностей}}$\newline\newline
+	\noindent\textbf{Студент} $\underline{\text{Равашдех Ф.Х.}}$\newline\newline
+	\noindent\textbf{Группа} $\underline{\text{ИУ7-75Б}}$\newline\newline
+	\noindent\textbf{Преподаватель} $\underline{\text{Рудаков И.В..}}$\newline
+	
+	\begin{center}
+		\vfill
+		Москва,~\the\year
+	\end{center}
+	\clearpage
+	
+	
+	
+	\section*{Задание}
+	\quad Реализовать критерий оценки случайной последовательностии сравнить результаты работы данного критерия на одноразрядных, двухразрядных и трехразрядных последовательностях целых чисел. Последовательности получать табличным и алгоритмическим способами.
+	
+	\section*{Табличный метод}
+	
+	\quad В данной работе для генерации случайных чисел табличным способом используются цифры из части таблицы <<A~Million Random Digits with~100,000~Normal~Deviates>>, опубликованной в 1955 году. Данная таблица сохранена в виде текстового файла. Для генерации числа читается число из файла, затем отсекается необходимое количество разрядов. 
+	
+	\section*{Линейный конгруэнтный метод}
+	\quad В данной работе был выбран линейный конгруэнтный метод в качестве алгоритмического.
+	Для осуществления генерации чисел данным методом, необходимо задать 4 числа:
+	
+	\begin{center}
+		m > 0, модуль\\
+		0 $\leq$ a	$\leq$ m, \text{множитель}\\
+		0 $\leq$ c $\leq$ m, \text{приращение}\\
+		0 $\leq$ $X_0$ $\leq$ m, \text{начальное число}\\
+	\end{center}
+	
+	Последовательность случайных чисел генерируется при помощи формулы:
+	\begin{equation}
+		X_{n+1}=(aX_n+c)\mod m
+	\end{equation}
+	
+	\section*{Собственный критерий}
+	
+	\quad Используется комбинированный критерий, который использует три критерия для получения оценки случайности последовательности:
+	\begin{enumerate}
+		\item проверка на среднее арифметическое значение;
+		\item проверка на среднее арифметическое значение последовтельности производных;
+		\item проверка на непереодичность последовательности.
+	\end{enumerate}
+	\begin{equation}
+		C = k_{avg} * c_{avg} + k_{avg_d }* c_{avg_d} + k_{period} * c_{period}
+	\end{equation}
+	\quad Где $C$ --- общий критерий, $k_{avg}$, $k_{avg_d }$, $k_{period}$ --- коэффициенты перечисленных критериев, $c_{avg}$,  $c_{avg_d}$, $c_{period}$ --- перечисленные критерии.
+	
+
+	
+	\section*{Вывод}
+	 \quad Использование комбинированного критерия позволяет обнаруживать не только отклонение от среднего значения последовательности, но и монотонность и периодичность последовательности.
+	
+	\clearpage
+	
+\end{document}

@@ -1,0 +1,25 @@
+(defun my-flatten (lst)
+    (cond   (   (null lst)
+                nil)
+            (   (atom (car lst))
+                (cons   (car lst) 
+                        (my-flatten (cdr lst))))
+            (   t
+                `(  ,@(my-flatten (car lst))
+                    ,@(my-flatten (cdr lst))))))
+
+; хвостовая дополняемая (развернуто)
+(defun my-flatten (lst &optional (res nil))
+    (cond   (   (null lst)
+                res)
+            (   (atom (car lst))
+                (my-flatten (cdr lst)
+                            (cons   (car lst)
+                                    res)))
+            (   t
+                (my-flatten (cdr lst)
+                            (my-flatten (car lst)
+                                        res)))))
+
+(defun my-flatten (lst)
+    (reverse ))

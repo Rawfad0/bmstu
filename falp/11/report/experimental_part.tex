@@ -1,0 +1,95 @@
+\chapter{Исследовательская часть}
+
+
+\section{Технические характеристики}
+
+Характеристики устройства, на котором выполнялись замеры:
+
+\begin{enumerate}
+	\item операционная система --- macOS Sonoma 14.1 (23B2073);
+	\item процессор --- Apple M3;
+	\item оперативная память --- 16 Гб.
+\end{enumerate}
+
+\section{Время выполнения реализаций алгоритмов}
+
+Замеры времени работы реализаций алгоритмов для каждого размера матриц проводились 100 раз, значение времени усреднялось. Данные замеров представлены в таблице~\ref{t:res}.
+
+
+\begin{table}[h]
+	\begin{center}
+		\small
+		\begin{threeparttable}
+			\caption{Таблица замеров времени работы алгоритмов}
+			\label{t:res}
+			\begin{tabular}{|r@{\hspace{7mm}}|r@{\hspace{7mm}}|r@{\hspace{7mm}}|}
+				\hline
+				Размер & Полным перебором & Муравьиный алгоритм \\
+				\hline
+				2 & 0.00011 & 0.00011 \\ \hline
+				3 & 0.00027 & 0.00027 \\ \hline
+				4 & 0.00104 & 0.00104 \\ \hline
+				5 & 0.00581 & 0.00581 \\ \hline
+				6 & 0.03724 & 0.03724 \\ \hline
+				7 & 0.27912 & 0.27912 \\ \hline
+				8 & 2.41039 & 2.41039 \\ \hline
+				9 & 23.09638 & 23.09638 \\ \hline
+				10 & 243.90210 & 243.90210 \\ \hline
+			\end{tabular}
+		\end{threeparttable}
+	\end{center}
+\end{table}
+
+\newpage
+
+На рисунке~\ref{fig:fig1} показаны графики зависимости времени работы реализаций алгоритмов решения задачи коммивояжера от размера матриц.
+
+
+\begin{figure}[h]
+	\centering
+	\includesvg[scale=0.65]{Figure_1.svg}
+	\caption{Графики сравнения выполнения реализаций алгоритмов по времени}
+	\label{fig:fig1}
+\end{figure}
+
+\section{Класс данных}
+
+В качестве классов данных для параметризации используются три графа, построенных на городах Африки. В качестве стоимостей ребер использовались расстояния между городами по прямой.
+
+\section{Результаты параметризации}
+
+\begin{longtable}{|>{\centering\arraybackslash}r| >{\centering\arraybackslash}r| >{\centering\arraybackslash}r| >{\centering\arraybackslash}r| >{\centering\arraybackslash}r| >{\centering\arraybackslash}r| >{\centering\arraybackslash}r| >{\centering\arraybackslash}r| >{\centering\arraybackslash}r| >{\centering\arraybackslash}r| >{\centering\arraybackslash}r| >{\centering\arraybackslash}r|}
+	\caption{Результаты параметризации муравьиного алгоритма}\label{tbl:param}
+	\\ \hline
+	\multicolumn{3}{|c|}{Параметры} & \multicolumn{3}{|c|}{Граф 1} & \multicolumn{3}{|c|}{Граф 2} & \multicolumn{3}{|c|}{Граф 3} \\
+	\hline
+	$\alpha$ & $\rho$ & \text{Дни} & \text{min} & \text{max} & \text{avg} & \text{min} & \text{max} & \text{avg} & \text{min} & \text{max} & \text{avg} \\
+	\hline
+	\endfirsthead
+	\hline
+	\endhead
+	\hline
+	\endfoot
+	\endlastfoot
+	\hline
+	 0.1 & 0.3 & 400 & 38  & 38  & 38  & 5  & 5  & 5  & 101  & 101  & 101 \\
+	0.1 & 0.3 & 500 & 38  & 38  & 38  & 5  & 5  & 5  & 101  & 101  & 101 \\
+	0.1 & 0.4 & 400 & 38  & 38  & 38  & 5  & 5  & 5  & 101  & 101  & 101 \\
+	0.1 & 0.4 & 500 & 38  & 38  & 38  & 5  & 5  & 5  & 101  & 101  & 101 \\
+	0.1 & 0.5 & 400 & 38  & 38  & 38  & 5  & 5  & 5  & 101  & 101  & 101 \\
+	0.1 & 0.6 & 100 & 38  & 38  & 38  & 5  & 5  & 5  & 101  & 101  & 101 \\
+	0.1 & 0.7 & 500 & 38  & 38  & 38  & 5  & 5  & 5  & 101  & 101  & 101 \\
+	0.1 & 0.8 & 300 & 38  & 38  & 38  & 5  & 5  & 5  & 101  & 101  & 101 \\
+	0.2 & 0.3 & 400 & 38  & 38  & 38  & 5  & 5  & 5  & 101  & 101  & 101 \\
+	0.2 & 0.3 & 500 & 38  & 38  & 38  & 5  & 5  & 5  & 101  & 101  & 101 \\
+	\hline
+\end{longtable}
+
+
+
+\section{Вывод}
+
+В результате исследования было получено, что на графе с количеством вершин менее 8 муравьиный алгоритм и алгоритм полного перебора решают задачу за примерно одинаковое время, а при количестве вершин большем или равном 8  алгоритм полного перебора начинает проигрывать в скорости муравьиному алгоритму.
+
+
+\clearpage

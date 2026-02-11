@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="f6a1db0b-a512-4ef6-9f57-0431d4735818" name="@RF9MBP 2025-09-30 16:52:28" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-09-30T16:52:28.7356700+03:00" queuing="2025-09-30T16:52:28.7356700+03:00" start="2025-09-30T16:52:28.1456750+03:00" finish="2025-09-30T16:52:28.7383480+03:00" />
+  <TestSettings name="default" id="42d096f8-b988-4774-84b2-65ad4cdcf0c7">
+    <Deployment runDeploymentRoot="_RF9MBP_2025-09-30_16_52_28" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="95fb2c27-cc67-4eab-bd37-624a7351a6f4" testId="b7861b9b-320f-1cb9-9494-63a63423b572" testName="FavoriteRepositoryTests.DeleteById_ReturnsDeleteedFavorite" computerName="RF9MBP" duration="00:00:00.0093543" startTime="2025-09-30T16:52:28.6510890+03:00" endTime="2025-09-30T16:52:28.6551120+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="95fb2c27-cc67-4eab-bd37-624a7351a6f4" />
+    <UnitTestResult executionId="49329013-a62c-4108-94e9-13f06d7d317b" testId="5571f119-32aa-c0d1-80be-9cdecfa3da24" testName="FavoriteRepositoryTests.GetById_ReturnsFavorite" computerName="RF9MBP" duration="00:00:00.1398174" startTime="2025-09-30T16:52:28.5038160+03:00" endTime="2025-09-30T16:52:28.6507920+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="49329013-a62c-4108-94e9-13f06d7d317b" />
+    <UnitTestResult executionId="b16f09c7-cb13-4679-aa71-67df737b3fb5" testId="402f09ce-b61d-226c-c1d0-44b641c638ea" testName="CustomerRepositoryTests.Update_ShouldInsertCustomer_WhenValid" computerName="RF9MBP" duration="00:00:00.0092812" startTime="2025-09-30T16:52:28.6512050+03:00" endTime="2025-09-30T16:52:28.6551550+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b16f09c7-cb13-4679-aa71-67df737b3fb5" />
+    <UnitTestResult executionId="0ee2f00e-2863-4499-a4a7-8d07f7de1bec" testId="a4794b07-527f-5b8b-b299-f78ca0322d0c" testName="CustomerRepositoryTests.Create_ShouldInsertCustomer_WhenValid" computerName="RF9MBP" duration="00:00:00.1398729" startTime="2025-09-30T16:52:28.5047490+03:00" endTime="2025-09-30T16:52:28.6511290+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0ee2f00e-2863-4499-a4a7-8d07f7de1bec" />
+    <UnitTestResult executionId="1583af32-6c90-479b-9e44-65f14bf16dca" testId="d0c86a2d-664b-5f7a-626b-9bbe8254b95d" testName="FavoriteRepositoryTests.GetByCustomerId_ReturnsOnlyThatCustomersFavorites" computerName="RF9MBP" duration="00:00:00.0114947" startTime="2025-09-30T16:52:28.6553210+03:00" endTime="2025-09-30T16:52:28.6666540+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1583af32-6c90-479b-9e44-65f14bf16dca" />
+    <UnitTestResult executionId="9f2729b0-7723-4b75-96d1-070822ed1031" testId="f1edbd32-ef33-9924-aa52-0cb4a951736e" testName="ProductRepositoryTests.GetByName_ReturnsMatchingProducts" computerName="RF9MBP" duration="00:00:00.1384155" startTime="2025-09-30T16:52:28.5046290+03:00" endTime="2025-09-30T16:52:28.6453070+03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9f2729b0-7723-4b75-96d1-070822ed1031" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="CustomerRepositoryTests.Create_ShouldInsertCustomer_WhenValid" storage="/users/rf9/swd/tests/dataaccess.tests/bin/debug/net9.0/dataaccess.tests.dll" id="a4794b07-527f-5b8b-b299-f78ca0322d0c">
+      <Execution id="0ee2f00e-2863-4499-a4a7-8d07f7de1bec" />
+      <TestMethod codeBase="/Users/rf9/swd/tests/DataAccess.Tests/bin/Debug/net9.0/DataAccess.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="CustomerRepositoryTests" name="Create_ShouldInsertCustomer_WhenValid" />
+    </UnitTest>
+    <UnitTest name="FavoriteRepositoryTests.DeleteById_ReturnsDeleteedFavorite" storage="/users/rf9/swd/tests/dataaccess.tests/bin/debug/net9.0/dataaccess.tests.dll" id="b7861b9b-320f-1cb9-9494-63a63423b572">
+      <Execution id="95fb2c27-cc67-4eab-bd37-624a7351a6f4" />
+      <TestMethod codeBase="/Users/rf9/swd/tests/DataAccess.Tests/bin/Debug/net9.0/DataAccess.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FavoriteRepositoryTests" name="DeleteById_ReturnsDeleteedFavorite" />
+    </UnitTest>
+    <UnitTest name="CustomerRepositoryTests.Update_ShouldInsertCustomer_WhenValid" storage="/users/rf9/swd/tests/dataaccess.tests/bin/debug/net9.0/dataaccess.tests.dll" id="402f09ce-b61d-226c-c1d0-44b641c638ea">
+      <Execution id="b16f09c7-cb13-4679-aa71-67df737b3fb5" />
+      <TestMethod codeBase="/Users/rf9/swd/tests/DataAccess.Tests/bin/Debug/net9.0/DataAccess.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="CustomerRepositoryTests" name="Update_ShouldInsertCustomer_WhenValid" />
+    </UnitTest>
+    <UnitTest name="FavoriteRepositoryTests.GetByCustomerId_ReturnsOnlyThatCustomersFavorites" storage="/users/rf9/swd/tests/dataaccess.tests/bin/debug/net9.0/dataaccess.tests.dll" id="d0c86a2d-664b-5f7a-626b-9bbe8254b95d">
+      <Execution id="1583af32-6c90-479b-9e44-65f14bf16dca" />
+      <TestMethod codeBase="/Users/rf9/swd/tests/DataAccess.Tests/bin/Debug/net9.0/DataAccess.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FavoriteRepositoryTests" name="GetByCustomerId_ReturnsOnlyThatCustomersFavorites" />
+    </UnitTest>
+    <UnitTest name="FavoriteRepositoryTests.GetById_ReturnsFavorite" storage="/users/rf9/swd/tests/dataaccess.tests/bin/debug/net9.0/dataaccess.tests.dll" id="5571f119-32aa-c0d1-80be-9cdecfa3da24">
+      <Execution id="49329013-a62c-4108-94e9-13f06d7d317b" />
+      <TestMethod codeBase="/Users/rf9/swd/tests/DataAccess.Tests/bin/Debug/net9.0/DataAccess.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FavoriteRepositoryTests" name="GetById_ReturnsFavorite" />
+    </UnitTest>
+    <UnitTest name="ProductRepositoryTests.GetByName_ReturnsMatchingProducts" storage="/users/rf9/swd/tests/dataaccess.tests/bin/debug/net9.0/dataaccess.tests.dll" id="f1edbd32-ef33-9924-aa52-0cb4a951736e">
+      <Execution id="9f2729b0-7723-4b75-96d1-070822ed1031" />
+      <TestMethod codeBase="/Users/rf9/swd/tests/DataAccess.Tests/bin/Debug/net9.0/DataAccess.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="ProductRepositoryTests" name="GetByName_ReturnsMatchingProducts" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="b7861b9b-320f-1cb9-9494-63a63423b572" executionId="95fb2c27-cc67-4eab-bd37-624a7351a6f4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5571f119-32aa-c0d1-80be-9cdecfa3da24" executionId="49329013-a62c-4108-94e9-13f06d7d317b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="402f09ce-b61d-226c-c1d0-44b641c638ea" executionId="b16f09c7-cb13-4679-aa71-67df737b3fb5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a4794b07-527f-5b8b-b299-f78ca0322d0c" executionId="0ee2f00e-2863-4499-a4a7-8d07f7de1bec" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d0c86a2d-664b-5f7a-626b-9bbe8254b95d" executionId="1583af32-6c90-479b-9e44-65f14bf16dca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f1edbd32-ef33-9924-aa52-0cb4a951736e" executionId="9f2729b0-7723-4b75-96d1-070822ed1031" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Список результатов" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Все загруженные результаты" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="6" executed="6" passed="6" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 9.0.4)
+[xUnit.net 00:00:00.04]   Discovering: DataAccess.Tests
+[xUnit.net 00:00:00.06]   Discovered:  DataAccess.Tests
+[xUnit.net 00:00:00.07]   Starting:    DataAccess.Tests
+[xUnit.net 00:00:00.25]   Finished:    DataAccess.Tests
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

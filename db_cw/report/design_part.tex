@@ -1,0 +1,169 @@
+\chapter{Конструкторский раздел}
+
+В данном разделе будет проведено описание сущностей базы данных, описание атрибутов, типов данных и ограничений, проектирование базы данных, описание ролевой модели.
+%В данном разделе будут спроектированы базы данных, описаны сущности, роли и триггеры. 
+
+\section{Описание сущностей базы данных}
+
+В таблицах~\ref{tbl:customer}-\ref{tbl:review} приведено описание сущностей баз данных.
+
+
+\begin{table}[h]
+	\centering
+	\caption{Описание сущности «Покупатель»}
+	\label{tbl:customer}
+	\begin{tabularx}{\textwidth}{|l|l|l|X|}
+		\hline
+		\textbf{Атрибут} & \textbf{Значение} & \textbf{Тип данных} & \textbf{Описание} \\ \hline
+		Идентификатор & id & UUID & Первичный ключ \\ \hline
+		Фамилия & surname & Строковый & Обязателен; не пустая строка \\ \hline
+		Имя & name & Строковый & Обязателен; не пустая строка \\ \hline
+		Номер телефона & phone & Строковый & Обязателен; уникален; формат телефонного номера \\ \hline
+		Эл. почта & email & Строковый & Обязателен; уникален; корректный формат email \\ \hline
+		Дата рождения & birthdate & Дата & Может быть пустым \\ \hline
+		Дата регистрации & registration\_date & Дата & Обязателен; по умолчанию — текущая дата \\ \hline
+		Бонусные баллы & bonus & Целочисленный & По умолчанию 0 \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Описание сущности «Продавец»}
+	\label{tbl:seller}
+	\begin{tabularx}{\textwidth}{|l|l|l|X|}
+		\hline
+		\textbf{Атрибут} & \textbf{Значение} & \textbf{Тип данных} & \textbf{Описание} \\ \hline
+		Идентификатор & id & UUID & Первичный ключ \\ \hline
+		Фамилия & surname & Строковый & Обязателен; не пустая строка \\ \hline
+		Имя & name & Строковый & Обязателен; не пустая строка \\ \hline
+		Номер телефона & phone & Строковый & Уникален; формат телефонного номера \\ \hline
+		Эл. почта & email & Строковый & Уникален; корректный формат email \\ \hline
+		Дата рождения & birthdate & Дата & Может быть пустым \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Описание сущности «Магазин»}
+	\label{tbl:store}
+	\begin{tabularx}{\textwidth}{|l|l|l|X|}
+		\hline
+		\textbf{Атрибут} & \textbf{Значение} & \textbf{Тип данных} & \textbf{Описание} \\ \hline
+		Идентификатор & id & UUID & Первичный ключ \\ \hline
+		Наименование & name & Строковый & Обязателен; уникален; не пустая строка \\ \hline
+		ОГРН & ogrn & Строковый & Уникален; обязательное поле \\ \hline
+		ИП & ip & Строковый & Может быть пустым \\ \hline
+		Количество оценок & rating\_count & Целочисленный & По умолчанию 0 \\ \hline
+		Средняя оценка & rating\_avg & Числовой (дробный) & По умолчанию 0.0; диапазон 0–5 \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Описание сущности «Товар»}
+	\label{tbl:product}
+	\begin{tabularx}{\textwidth}{|l|l|l|X|}
+		\hline
+		\textbf{Атрибут} & \textbf{Значение} & \textbf{Тип данных} & \textbf{Описание} \\ \hline
+		Идентификатор & id & UUID & Первичный ключ \\ \hline
+		Наименование & name & Строковый & Обязателен; не пустая строка \\ \hline
+		Категория & category & Строковый & Обязателен \\ \hline
+		Описание & description & Текстовый & Может быть пустым \\ \hline
+		Количество оценок & rating\_count & Целочисленный & По умолчанию 0 \\ \hline
+		Средняя оценка & rating\_avg & Числовой (дробный) & По умолчанию 0.0; диапазон 0–5 \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Описание сущности «Предложение»}
+	\label{tbl:offer}
+	\begin{tabularx}{\textwidth}{|l|l|l|X|}
+		\hline
+		\textbf{Атрибут} & \textbf{Значение} & \textbf{Тип данных} & \textbf{Описание} \\ \hline
+		Идентификатор & id & UUID & Первичный ключ \\ \hline
+		ID товара & product\_id & UUID & Внешний ключ на «Товар» \\ \hline
+		ID магазина & store\_id & UUID & Внешний ключ на «Магазин» \\ \hline
+		Цена & price & Числовой (дробный) & Обязателен; >0 \\ \hline
+		Количество & quantity & Целочисленный & Обязателен; >=0 \\ \hline
+		Срок доставки & delivery\_time & Целочисленный & Количество дней; может быть пустым \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Описание сущности «Заказ»}
+	\label{tbl:order}
+	\begin{tabularx}{\textwidth}{|l|l|l|X|}
+		\hline
+		\textbf{Атрибут} & \textbf{Значение} & \textbf{Тип данных} & \textbf{Описание} \\ \hline
+		Идентификатор & id & UUID & Первичный ключ \\ \hline
+		ID предложения & offer\_id & UUID & Внешний ключ на «Предложение» \\ \hline
+		Количество & quantity & Целочисленный & Обязателен; >0 \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Описание сущности «Избранное»}
+	\label{tbl:favorite}
+	\begin{tabularx}{\textwidth}{|l|l|l|X|}
+		\hline
+		\textbf{Атрибут} & \textbf{Значение} & \textbf{Тип данных} & \textbf{Описание} \\ \hline
+		Идентификатор & id & UUID & Первичный ключ \\ \hline
+		ID покупателя & customer\_id & UUID & Внешний ключ на «Покупатель» \\ \hline
+		ID товара & product\_id & UUID & Внешний ключ на «Товар» \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Описание сущности «Отзыв»}
+	\label{tbl:review}
+	\begin{tabularx}{\textwidth}{|l|l|l|X|}
+		\hline
+		\textbf{Атрибут} & \textbf{Значение} & \textbf{Тип данных} & \textbf{Описание} \\ \hline
+		Идентификатор & id & UUID & Первичный ключ \\ \hline
+		ID покупателя & customer\_id & UUID & Внешний ключ на «Покупатель» \\ \hline
+		ID товара & product\_id & UUID & Внешний ключ на «Товар» \\ \hline
+		Оценка & rating & Числовой & Обязательна; диапазон 0–5 \\ \hline
+		Текст отзыва & text & Текстовый & Может быть пустым; длина ограничена \\ \hline
+	\end{tabularx}
+\end{table}
+
+\clearpage
+
+\section{Диаграмма проектируемой базы данных}
+
+На рисунке~\ref{fig:er_diagram2} приведена диаграмма сущность-связь проектируемой базы данных в нотации Чена.
+
+\begin{figure}[h!]
+	\centering
+	\includesvg[scale=0.65]{images/er.drawio.svg}
+	\caption{Диаграмма сущность-связь проектируемой базы данных в нотации Чена}
+	\label{fig:er_diagram2}
+\end{figure}
+
+\clearpage
+
+\section{Описание проектируемой ролевой модели на уровне БД}
+
+Определены следующие роли:
+
+\begin{enumerate}
+	\item \textbf{Пользователь} (marketplace\_user). Роль позволяет просматривать данные таблиц товаров, предложений, магазинов. Внесение изменений недоступно.
+	
+	\item \textbf{Менеджер} (marketplace\_manager). Эта роль включает в себя все возможности пользователя. Дополнительно менеджер получает право на просмотр и редактирование всех таблиц базы данных, а также добавление товаров.
+	
+	\item \textbf{Администратор} (marketplace\_admin). Эта роль обладает полным доступом и не имеет ограничений.
+\end{enumerate}
+
+\clearpage
+
+\section*{Вывод}
+
+В данном разделе было проведено описание сущностей базы данных, описание атрибутов, типов данных и ограничений, проектирование базы данных, описание ролевой модели.
+
+%<что сделали в конструкторке и получили в результате, кратко>
+
+\clearpage

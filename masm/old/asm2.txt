@@ -1,0 +1,18 @@
+Data1 SEGMENT WORD 'DATA'
+Var1 DW 0
+Data1 ENDS
+Data2 SEGMENT WORD 'DATA'
+Var2 DW 0
+Data2 ENDS
+Code SEGMENT WORD 'CODE'
+ ASSUME CS:Code
+ProgramStart:
+ mov ax,Data1
+ mov ds,ax
+ ASSUME DS:Data1
+ mov ax,Data2
+ mov es,ax
+ ASSUME ES:Data2
+ mov ax,[Var2]
+Code ENDS
+END ProgramStart

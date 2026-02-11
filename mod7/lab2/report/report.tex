@@ -1,0 +1,158 @@
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{sverb}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{hyperref} 
+\usepackage{url}
+\usepackage{titlesec, blindtext, color}
+\usepackage{listings}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\graphicspath{{../}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{tabularx}
+\usepackage{subcaption}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{tikz}
+\usepackage[noend]{algpseudocode}
+\usepackage{float}
+\definecolor{gray75}{gray}{0.75}
+\definecolor{Blue}{HTML}{5D8AA8}
+\newcommand{\hsp}{\hspace{20pt}}
+
+\newcommand{\RomanNumeralCaps}[1]
+{\MakeUppercase{\romannumeral #1}}
+
+
+
+% Для листинга кода:
+\lstset{ %
+	language=c,                 % выбор языка для подсветки (здесь это С)
+	basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода             % где поставить нумерацию строк (слева\справа)
+	numberstyle=\tiny,           % размер шрифта для номеров строк
+	stepnumber=1, 
+	keywordstyle=\color{blue},% размер шага между двумя номерами строк
+	numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+	showspaces=false,            % показывать или нет пробелы специальными отступами
+	showstringspaces=false,      % показывать или нет пробелы в строках
+	showtabs=false,             % показывать или нет табуляцию в строках
+	frame=single,              % рисовать рамку вокруг кода
+	tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+	captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+	breaklines=true,           % автоматически переносить строки (да\нет)
+	breakatwhitespace=false, % переносить строки только если есть пробел
+	escapeinside={\#*}{*)}  % Стиль литералов
+}
+
+
+\titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter.\textcolor{gray75}\hsp}{0pt}{\Huge\bfseries}
+\newcommand{\specchapter}[1]{\chapter*{#1}\addcontentsline{toc}{chapter}{#1}}
+\newcommand{\specsection}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
+\newcommand{\specsubsection}[1]{\subsection*{#1}\addcontentsline{toc}{subsection}{#1}}
+
+% геометрия
+
+
+\setcounter{tocdepth}{4} % фикс переноса 
+\righthyphenmin = 2
+\tolerance = 2048
+
+
+\thispagestyle{empty}
+
+\geometry{pdftex, left = 3cm, right = 1cm, top = 2cm, bottom = 2cm}
+
+\begin{document}
+	
+\thispagestyle{empty}
+
+
+\noindent \begin{minipage}{0.15\textwidth}
+	\includegraphics[width=\linewidth]{images/b_logo}
+\end{minipage}
+\noindent\begin{minipage}{0.85\textwidth}\centering
+	\fontsize{12pt}{12pt}\selectfont
+	\textbf{Министерство науки и высшего образования Российской Федерации}\\
+	\textbf{Федеральное государственное автономное образовательное учреждение высшего образования}\\
+	\textbf{«Московский государственный технический университет имени Н.Э.~Баумана}\\
+	\textbf{(национальный исследовательский университет)»}\\
+	\textbf{(МГТУ им. Н.Э.~Баумана)}
+\end{minipage}
+
+\noindent\rule{\linewidth}{3pt}
+\newline\newline
+\noindent ФАКУЛЬТЕТ $\underline{\text{«Информатика и системы управления»}}$ \newline\newline
+\noindent КАФЕДРА $\underline{\text{«Программное обеспечение ЭВМ и информационные технологии»}}$
+
+\vspace{1cm}
+
+\begin{center}
+	\noindent\begin{minipage}{1.3\textwidth}\centering
+		\Large\textbf{Лабораторная работа № 2}\newline
+		\textbf{по дисциплине <<Моделирование>>}\newline\newline
+	\end{minipage}
+\end{center}
+
+\noindent\textbf{Тема} $\underline{\text{Марковские процессы}}$\newline\newline
+\noindent\textbf{Студент} $\underline{\text{Равашдех Ф.Х.}}$\newline\newline
+\noindent\textbf{Группа} $\underline{\text{ИУ7-75Б}}$\newline\newline
+\noindent\textbf{Преподаватель} $\underline{\text{Рудаков И.В..}}$\newline
+
+\begin{center}
+	\vfill
+	Москва,~\the\year
+\end{center}
+\clearpage
+
+
+
+\section*{Задание}
+\quad Разработать программное обеспечение, предоставляющее возможность определения вероятности и времени пребывания системы для каждого состояния в установившемся режиме работы в зависимости от заданной матрицы интенсивностей переходов.
+
+\section*{Теория}
+
+\quad Случайный процесс, протекающий в некоторой системе $S$, называется марковским, если вероятность вероятность любого состояния системы в будущем зависит только от ее состояния в настоящем времени и не зависит от того, каким образом система пришла в это состояние.
+
+Для марковских процессов используются уравнения Колмогорова, составляющиеся по следующему правилу:
+
+\begin{enumerate}
+	\item В левой части каждого уравнения стоит производная вероятности
+	состояния.
+	\item Правая часть содержит столько членов, сколько стрелок связано с этим
+	состоянием; если стрелка направлена из состояния соответствующий член
+	имеет знак <<->>, если в состояние --- знак <<+>>.
+	\item Каждый член равен плотности вероятности перехода (интенсивности),
+	соответствующей данной стрелке, умноженной на вероятность того состояния,
+	из которого исходит стрелка.
+\end{enumerate}
+
+То есть строится система уравнений, которые имеют вид:
+
+\begin{equation}
+	P_i'(t) = \sum\limits_{j=1}^{n} \lambda_{ji}P_j(t) - P_i(t)
+	\sum\limits_{j=1}^{n} \lambda_{ij},
+\end{equation}
+
+где $P_i(t)$ -- вероятность того, что система находится в $i$-ом состоянии; $n$ --- число состояний в системе; $\lambda_{ij}$ --- интенсивность перехода системы из $i$-ого состояния в $j$-ое.
+
+Одно из уравнений данной системы заменяется условием нормировки:
+
+\begin{equation}
+	\sum\limits_{i=1}^{n} P_i(t) = 1.
+\end{equation}
+
+\quad В силу того, что предельные вероятности состояний постоянны, то для их
+определения в уравнениях Колмогорова необходимо подставить нули вместо производных и решить систему линейных алгебраических уравнений.
+
+\clearpage
+	
+\end{document}

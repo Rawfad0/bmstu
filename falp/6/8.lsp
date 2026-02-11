@@ -1,0 +1,10 @@
+(defun first_odd (lst)
+    (cond   (   (null lst)
+                nil)
+            (   (numberp (car lst))
+                (if (oddp (car lst))
+                    (car lst)
+                    (first_odd (cdr lst))))
+            (   t
+                (or (first_odd (car lst))
+                    (first_odd (cdr lst))))))

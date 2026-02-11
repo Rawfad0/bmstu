@@ -1,0 +1,181 @@
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{sverb}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{hyperref} 
+\usepackage{url}
+\usepackage{titlesec, blindtext, color}
+\usepackage{listings}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\graphicspath{{../}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{tabularx}
+\usepackage{subcaption}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{tikz}
+\usepackage[noend]{algpseudocode}
+\usepackage{float}
+\definecolor{gray75}{gray}{0.75}
+\definecolor{Blue}{HTML}{5D8AA8}
+\newcommand{\hsp}{\hspace{20pt}}
+
+\newcommand{\RomanNumeralCaps}[1]
+{\MakeUppercase{\romannumeral #1}}
+
+
+
+% Для листинга кода:
+\lstset{ %
+	language=c,                 % выбор языка для подсветки (здесь это С)
+	basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода             % где поставить нумерацию строк (слева\справа)
+	numberstyle=\tiny,           % размер шрифта для номеров строк
+	stepnumber=1, 
+	keywordstyle=\color{blue},% размер шага между двумя номерами строк
+	numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+	showspaces=false,            % показывать или нет пробелы специальными отступами
+	showstringspaces=false,      % показывать или нет пробелы в строках
+	showtabs=false,             % показывать или нет табуляцию в строках
+	frame=single,              % рисовать рамку вокруг кода
+	tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+	captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+	breaklines=true,           % автоматически переносить строки (да\нет)
+	breakatwhitespace=false, % переносить строки только если есть пробел
+	escapeinside={\#*}{*)}  % Стиль литералов
+}
+
+
+\titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter.\textcolor{gray75}\hsp}{0pt}{\Huge\bfseries}
+\newcommand{\specchapter}[1]{\chapter*{#1}\addcontentsline{toc}{chapter}{#1}}
+\newcommand{\specsection}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
+\newcommand{\specsubsection}[1]{\subsection*{#1}\addcontentsline{toc}{subsection}{#1}}
+
+% геометрия
+
+
+\setcounter{tocdepth}{4} % фикс переноса 
+\righthyphenmin = 2
+\tolerance = 2048
+
+
+\thispagestyle{empty}
+
+\geometry{pdftex, left = 3cm, right = 1cm, top = 2cm, bottom = 2cm}
+
+\begin{document}
+	
+\thispagestyle{empty}
+
+
+\noindent \begin{minipage}{0.15\textwidth}
+	\includegraphics[width=\linewidth]{images/b_logo}
+\end{minipage}
+\noindent\begin{minipage}{0.85\textwidth}\centering
+	\fontsize{12pt}{12pt}\selectfont
+	\textbf{Министерство науки и высшего образования Российской Федерации}\\
+	\textbf{Федеральное государственное автономное образовательное учреждение высшего образования}\\
+	\textbf{«Московский государственный технический университет имени Н.Э.~Баумана}\\
+	\textbf{(национальный исследовательский университет)»}\\
+	\textbf{(МГТУ им. Н.Э.~Баумана)}
+\end{minipage}
+
+\noindent\rule{\linewidth}{3pt}
+\newline\newline
+\noindent ФАКУЛЬТЕТ $\underline{\text{«Информатика и системы управления»}}$ \newline\newline
+\noindent КАФЕДРА $\underline{\text{«Программное обеспечение ЭВМ и информационные технологии»}}$
+
+\vspace{1cm}
+
+\begin{center}
+	\noindent\begin{minipage}{1.3\textwidth}\centering
+		\Large\textbf{Лабораторная работа № 3}\newline
+		\textbf{по дисциплине <<Моделирование>>}\newline\newline
+	\end{minipage}
+\end{center}
+
+\noindent\textbf{Тема} $\underline{\text{Распределения случайных величин}}$\newline\newline
+\noindent\textbf{Студент} $\underline{\text{Равашдех Ф.Х.}}$\newline\newline
+\noindent\textbf{Группа} $\underline{\text{ИУ7-75Б}}$\newline\newline
+\noindent\textbf{Преподаватель} $\underline{\text{Рудаков И.В..}}$\newline
+
+\begin{center}
+	\vfill
+	Москва,~\the\year
+\end{center}
+\clearpage
+
+
+
+\section*{Задание}
+\quad Разработать программное обеспечение, выводящее графики функций плотностей распределений и функций распределений для равномерного, Пуассоновского, экспоненциального, нормального, Эрланговского распределений
+в зависимости от заданных параметров соответствующих распределений.
+
+
+\section*{Теория}
+
+\subsection*{1. Равномерное распределение $X \sim \text{U}[a,b]$}
+\begin{align}
+	\text{Функция плотности распределения:} \quad & f_X(x) =
+	\begin{cases}
+		\dfrac{1}{b-a}, & a \le x \le b, \\
+		0, & \text{иначе.}
+	\end{cases} \\
+	\text{Функция распределения:} \quad & F_X(x) =
+	\begin{cases}
+		0, & x < a, \\
+		\dfrac{x-a}{b-a}, & a \le x \le b, \\
+		1, & x > b.
+	\end{cases} \\
+	M[X] = \frac{a+b}{2}, \quad & D[X] = \frac{(b-a)^2}{12}
+\end{align}
+
+\subsection*{2. Пуассоновское распределение $X \sim \text{P}(\lambda)$}
+\begin{align}
+	\text{Функция вероятности:} \quad & P(X=k) = \frac{\lambda^k e^{-\lambda}}{k!}, \quad k = 0,1,2,\dots \\
+	\text{Функция распределения:} \quad & F_X(k) = \sum_{i=0}^{k} \frac{\lambda^i e^{-\lambda}}{i!}, \quad k = 0,1,2,\dots \\
+	M[X] = \lambda, \quad & D[X] = \lambda
+\end{align}
+
+\subsection*{3. Экспоненциальное распределение $X \sim \text{Exp}(\lambda)$}
+\begin{align}
+	\text{Функция плотности распределения:} \quad & f_X(x) =
+	\begin{cases}
+		\lambda e^{-\lambda x}, & x \ge 0, \\
+		0, & x < 0
+	\end{cases} \\
+	\text{Функция распределения:} \quad & F_X(x) =
+	\begin{cases}
+		0, & x < 0, \\
+		1 - e^{-\lambda x}, & x \ge 0
+	\end{cases} \\
+	M[X] = \frac{1}{\lambda}, \quad & D[X] = \frac{1}{\lambda^2}
+\end{align}
+
+\subsection*{4. Нормальное распределение $X \sim N(\mu,\sigma^2)$}
+\begin{align}
+	\text{Функция плотности распределения:} \quad & f_X(x) = \frac{1}{\sigma \sqrt{2 \pi}} \exp \Bigg( - \frac{(x-\mu)^2}{2\sigma^2} \Bigg) \\
+	\text{Функция распределения:} \quad & F_0(x) =  \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{x} e^{\frac{-t^2}{2}} dt \\
+	M[X] = \mu, \quad & D[X] = \sigma^2
+\end{align}
+
+\subsection*{5. k-Эрланговское распределение $X \sim \text{E}(k,\lambda)$}
+\begin{align}
+	\text{Функция плотности распределения:} \quad & f_X(x) = \frac{\lambda (\lambda x)^{k-1} e^{-\lambda x}}{(k-1)!}, \quad x \ge 0 \\
+	\text{Функция распределения:} \quad & F_X(x) = 1 - \sum_{n=0}^{k-1} \frac{(\lambda x)^n e^{-\lambda x}}{n!}, \quad x \ge 0 \\
+	M[X] = \frac{k}{\lambda}, \quad & D[X] = \frac{k}{\lambda^2}
+\end{align}
+
+
+
+\clearpage
+	
+\end{document}
