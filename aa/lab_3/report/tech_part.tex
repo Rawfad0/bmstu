@@ -1,0 +1,242 @@
+\chapter{Технологическая часть}
+
+\section{Требования к программному обеспечению}
+
+Входные данные: две матрицы и размеры матриц.
+
+Выходные данные: матрица и размеры матрицы.
+
+\section{Средства реализации}
+Алгоритмы для данной лабораторной работы были реализованы на языке $C$ с использованием функции $clock$~\cite{lit3} для замера процессорного времени. Графики были созданы с помощью библиотеки для визуализации данных $Matplotlib$~\cite{lit4}.
+
+\section{Реализация алгоритмов}
+
+Реализация алгоритмов умножения матриц стандартным методом, методом Винограда и оптимизированным методом Винограда представлена в листингах~\ref{lst:std},~\ref{lst:win} и~\ref{lst:opt}.
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:std,caption=Функция умножения матриц стандартным методом]
+matrix_error_t matrix_mult_standart(const matrix_t *a, const matrix_t *b, matrix_t **r)
+{
+	matrix_error_t rc = MATRIX_OK;
+	if (!a || !b || a->cols != b->rows)
+		rc = MATRIX_INVALID_PARAM;
+	else if (!( *r = matrix_create(a->rows, b->cols)))
+		rc = MATRIX_MEM;
+	else
+	{
+		for (size_t i = 0; i < a->rows; i++)
+			for (size_t j = 0; j < b->cols; j++)
+				for (size_t k = 0; k < a->cols; k++)
+					( *r)->data[i][j] += a->data[i][k] * b->data[k][j];
+	}
+	return rc;
+}
+	\end{lstlisting}
+\end{center}
+\newpage
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:win,caption=Функция умножения матриц методом Винограда]
+matrix_error_t calc_row_factor(const matrix_t *matrix, double **row_factor)
+{
+	matrix_error_t rc = MATRIX_OK;
+	if (matrix == NULL || matrix->data == NULL || row_factor == NULL || *row_factor != NULL)
+		rc = MATRIX_INVALID_PARAM;
+	else if (!( *row_factor = calloc(matrix->rows, sizeof(double))))
+		rc = MATRIX_MEM;
+	else
+		for (size_t i = 0; i < matrix->rows; i++)
+			for (size_t j = 0; j < matrix->cols / 2; j++)
+				( *row_factor)[i] += matrix->data[i][2 * j] * matrix->data[i][2 * j + 1];
+	return rc;
+}
+
+matrix_error_t calc_col_factor(const matrix_t *matrix, double **col_factor)
+{
+	matrix_error_t rc = MATRIX_OK;
+	if (matrix == NULL || matrix->data == NULL || col_factor == NULL || *col_factor != NULL)
+		rc = MATRIX_INVALID_PARAM;
+	else if (!( *col_factor = calloc(matrix->cols, sizeof(double))))
+		rc = MATRIX_MEM;
+	else
+		for (size_t i = 0; i < matrix->rows / 2; i++)
+			for (size_t j = 0; j < matrix->cols; j++)
+				( *col_factor)[j] += matrix->data[2 * i][j] * matrix->data[2 * i + 1][j];
+	return rc;
+}
+
+matrix_error_t matrix_mult_winograd(const matrix_t *a, const matrix_t *b, matrix_t **r)
+{
+	matrix_error_t rc = MATRIX_OK;
+	double *row_factor = NULL, *col_factor = NULL;
+	if (a == NULL || a->data == NULL || b == NULL || b->data == NULL || a->cols != b->rows || r == NULL || *r != NULL)
+		rc = MATRIX_INVALID_PARAM;
+	else if (!( *r = matrix_create(a->rows, b->cols)))
+		rc = MATRIX_MEM;
+	else if ((rc = calc_row_factor(a, &row_factor)) != MATRIX_OK)
+		matrix_free(r);
+	else if ((rc = calc_col_factor(b, &col_factor)) != MATRIX_OK)
+		matrix_free(r), free(row_factor);
+	else
+	{
+		for (size_t i = 0; i < a->rows; i++)
+		{
+			for (size_t j = 0; j < b->cols; j++)
+			{
+				( *r)->data[i][j] = -row_factor[i] - col_factor[j];
+				for (size_t k = 0; k < a->cols / 2; k++)
+					( *r)->data[i][j] += (a->data[i][2 * k + 1] + b->data[2 * k][j]) * (a->data[i][2 * k] + b->data[2 * k + 1][j]);
+			}
+		}
+		if (a->cols % 2)
+			for (size_t i = 0; i < a->rows; i++)
+				for (size_t j = 0; j < b->cols; j++)
+					( *r)->data[i][j] += a->data[i][a->cols - 1] * b->data[b->rows - 1][j];
+		free(row_factor);
+		free(col_factor);
+	}
+	return rc;
+}
+	\end{lstlisting}
+\end{center}
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:opt,caption=Функция умножения матриц оптимизированным методом Винограда]
+matrix_error_t calc_row_factor_opt(const matrix_t *matrix, double **row_factor)
+{
+	matrix_error_t rc = MATRIX_OK;
+	if (matrix == NULL || matrix->data == NULL || row_factor == NULL || *row_factor != NULL)
+		rc = MATRIX_INVALID_PARAM;
+	else if (!( *row_factor = calloc(matrix->rows, sizeof(double))))
+		rc = MATRIX_MEM;
+	else
+		for (size_t i = 0; i < matrix->rows; i++)
+			for (size_t j = 1; j < matrix->cols; j += 2)
+				( *row_factor)[i] -= matrix->data[i][j - 1] * matrix->data[i][j];
+	return rc;
+}
+
+matrix_error_t calc_col_factor_opt(const matrix_t *matrix, double **col_factor)
+{
+	matrix_error_t rc = MATRIX_OK;
+	if (matrix == NULL || matrix->data == NULL || col_factor == NULL || *col_factor != NULL)
+		rc = MATRIX_INVALID_PARAM;
+	else if (!( *col_factor = calloc(matrix->cols, sizeof(double))))
+		rc = MATRIX_MEM;
+	else
+		for (size_t i = 1; i < matrix->rows; i += 2)
+			for (size_t j = 0; j < matrix->cols; j++)
+				( *col_factor)[j] -= matrix->data[i - 1][j] * matrix->data[i][j];
+	return rc;
+}
+
+matrix_error_t matrix_mult_winograd_opt(const matrix_t *a, const matrix_t *b, matrix_t **r)
+{
+	matrix_error_t rc = MATRIX_OK;
+	double *row_factor = NULL, *col_factor = NULL;
+	if (a == NULL || a->data == NULL || b == NULL || b->data == NULL || a->cols != b->rows || r == NULL || *r != NULL)
+		rc = MATRIX_INVALID_PARAM;
+	else if (!( *r = matrix_create(a->rows, b->cols)))
+		rc = MATRIX_MEM;
+	else if ((rc = calc_row_factor_opt(a, &row_factor)) != MATRIX_OK)
+		matrix_free(r);
+	else if ((rc = calc_col_factor_opt(b, &col_factor)) != MATRIX_OK)
+		matrix_free(r), free(row_factor);
+	else
+	{
+		int flag = a->cols % 2;
+		for (size_t i = 0; i < a->rows; i++)
+		{
+			for (size_t j = 0; j < b->cols; j++)
+			{
+				( *r)->data[i][j] = row_factor[i] + col_factor[j];
+				for (size_t k = 1; k < a->cols; k += 2)
+					( *r)->data[i][j] += (a->data[i][k] + b->data[k - 1][j]) * (a->data[i][k - 1] + b->data[k][j]);
+				if (flag)
+					( *r)->data[i][j] += a->data[i][a->cols - 1] * b->data[b->rows - 1][j];
+			}
+		}
+		free(row_factor);
+		free(col_factor);
+	}
+	return rc;
+}
+	\end{lstlisting}
+\end{center}
+
+\section{Тестирование}
+
+В таблице~\ref{t:tests} представлены данные о результатах тестирования реализации алгоритмов умножения матриц.
+
+\begin{table}[!ht]
+	
+	\begin{center}
+		\small
+		\begin{threeparttable}
+			\caption{Модульные тесты}
+			\label{t:tests}
+			\begin{tabular}{|c|c|c|}
+				\hline
+				Матрица А & Матрица В & Результат \\ 
+				\hline
+				$\begin{pmatrix}
+					1 & 2 & 3 \\
+					4 & 5 & 6 \\
+					7 & 8 & 9
+				\end{pmatrix}$ &
+				$\begin{pmatrix}
+					1 & 0 & 0 \\
+					0 & 1 &0 \\
+					0 & 0 & 1
+				\end{pmatrix}$ &
+				$\begin{pmatrix}
+					1 & 2 & 3 \\
+					4 & 5 & 6 \\
+					7 & 8 & 9
+				\end{pmatrix}$ \\
+				\hline 
+				$\begin{pmatrix}
+					1 & 2 & 3 \\
+					4 & 5 & 6 \\
+					7 & 8 & 9
+				\end{pmatrix}$ &
+				$\begin{pmatrix}
+					9 & 8 & 7 \\
+					6 & 5 & 4 \\
+					3 & 2 & 1
+				\end{pmatrix}$ &
+				$\begin{pmatrix}
+					30 & 24 & 18 \\
+					84 & 69 & 54 \\
+					138 & 114 & 90
+				\end{pmatrix}$ \\
+				\hline
+				$\begin{pmatrix}
+					1 & 1 & 1
+				\end{pmatrix}$ &
+				$\begin{pmatrix}
+					1 \\
+					1 \\
+					1 
+				\end{pmatrix}$ &
+				$\begin{pmatrix}
+					1 & 1 & 1\\
+					1 & 1 & 1 \\
+					1 & 1 & 1
+				\end{pmatrix}$ \\
+				\hline
+
+			\end{tabular}	
+		\end{threeparttable}
+	\end{center}
+\end{table}
+
+Все тесты пройдены успешно.
+
+\section*{Вывод}
+
+В данном разделе были рассмотрены требования к программному обеспечению, используемые средства реализации, приведена реализация алгоритмов и результаты тестирования.
+
+\clearpage

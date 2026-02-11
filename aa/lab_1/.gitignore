@@ -1,0 +1,11 @@
+.DS_Store
+svg-inkscape
+*.txt
+*.aux
+*.gz
+*.log
+*.toc
+*.bkp
+*.out
+*.drawio
+todo.md

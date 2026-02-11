@@ -1,0 +1,13 @@
+.DS_Store
+svg-inkscape
+*.aux
+*.gz
+*.log
+*.toc
+*.bkp
+*.out
+*.drawio
+*.dvi
+.coverage
+.makefile
+__pycache__

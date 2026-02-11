@@ -1,0 +1,64 @@
+\chapter{Аналитическая часть}
+
+\section{Стандартный алгоритм}
+
+Пусть даны две матрицы $A$ и $B$ размерами $N~\times~M$ и $M~\times~K$~(\ref{eq:mat}). 
+
+\begin{equation}
+	\label{eq:mat}
+	A = 
+	\begin{pmatrix}
+		a_{11} & a_{12} & \ldots & a_{1m} \\
+		a_{21} & a_{22} & \ldots & a_{2m} \\
+		\hdots & \hdots & \ddots & \vdots \\
+		a_{n1} & a_{n2} & \ldots & a_{nm}
+	\end{pmatrix}, \ \ \
+	B = 
+	\begin{pmatrix}
+		b_{11} & b_{12} & \ldots & b_{1k} \\
+		b_{21} & b_{22} & \ldots & b_{2k} \\
+		\hdots & \hdots & \ddots & \vdots \\
+		b_{m1} & b_{m2} & \ldots & b_{mk}
+	\end{pmatrix}
+\end{equation}
+
+
+В результате умножения $A$ на $B$ получается матрица $С$ размером $N~\times~K$~(\ref{eq:resmat}), где каждый элемент выражается через элементы $A$ и $B$~(\ref{eq:std}).
+
+\begin{equation}
+	\label{eq:resmat}
+	C = A\times B =
+	\begin{pmatrix}
+		c_{11} & c_{12} & \ldots & c_{1k} \\
+		c_{21} & c_{22} & \ldots & c_{2k} \\
+		\hdots & \hdots & \ddots & \vdots \\
+		c_{n1} & c_{n2} & \ldots & c_{nk}
+	\end{pmatrix},
+\end{equation}
+
+\begin{equation}
+	\label{eq:std}
+	c_{ij} = a_{i1} \cdot b_{1j} + ... + a_{im} \cdot b_{mj} = \sum\limits_{l=1}^{m} a_{il} \cdot b_{lj} \ \ (i = \overline{1,n}, \ j = \overline{1,k}).
+\end{equation}
+
+
+\section{Алгоритм Винограда}
+
+В стандартном алгоритме каждый элемент матрицы произведения представляется как скалярное произведение строки $A$ и столбца $B$, тогда как в алгоритме Винограда это скалярное произведение преобразуется в эквивалентное выражение~(\ref{eq:win1}), которое имеет б\a'oльшую трудоемкость, чем у скалярного произведения, но в случае матрицы можно выделить повторяющиеся слагаемые, которые можно посчитать заранее, что дает выигрыш в трудоемкости~\cite{lit5}.
+
+Для четного $M$ (для нечетного $M$ добавляется $a_{i m} \cdot b_{m j}$):
+\begin{equation}
+	\label{eq:win1}
+	\begin{split}
+	c_{i j} = (a_{i1} + b_{2j}) \cdot (a_{i2} + b_{1j}) + (a_{i3} + b_{4j}) \cdot (a_{i4} + b_{3j}) + ... + 
+	(a_{i m-1} + b_{m j}) \cdot (a_{i m} + b_{m-1 j}) - \\
+	- a_{i1} \cdot a_{i2} - a_{i3} \cdot a_{i4} - ... - a_{i m-1} \cdot a_{im} - b_{1j} \cdot b_{2j} - b_{3j} \cdot b_{4j} - ... - b_{m-1 j} \cdot b_{mj} = \\
+	= \sum\limits_{l=1}^{m/2} ( (a_{i 2l-1} + b_{2l j}) \cdot (a_{i 2l} + b_{2l-1 j}) - a_{i 2l-1} \cdot a_{i 2l} - b_{2l-1 j} \cdot b_{2l j} ) \ \ (i = \overline{1,n}, \ j = \overline{1,k})
+	\end{split}
+\end{equation}
+
+\section*{Вывод}
+
+В данном разделе рассмотрены алгоритмы умножения матриц.
+
+\clearpage

@@ -1,0 +1,168 @@
+\chapter{Технологическая часть}
+
+\section{Требования к программному обеспечению}
+
+Входные данные: две строки на русском или английском языке в любом регистре;
+
+Выходные данные: искомое расстояние для каждого метода.
+
+\section{Средства реализации}
+Алгоритмы для данной лабораторной работы были реализованы на языке MicroPython (реализация Python) с помощью функции замера времени ticks\_ms~\cite{lit3}.
+
+\section{Реализация алгоритмов}
+
+Реализация алгоритма нахождения расстояния Левенштейна и Дамерау~---~Левенштейна представлена в листинга~(\ref{lst:lev_dist})~-~ ~(\ref{lst:dam_lev_dist}).
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:lev_dist,caption=Функция нахождения расстояния Левенштейна нерекурсивно]
+def lev_dist(s1, s2):
+	l1, l2 = len(s1), len(s2)
+	matrix = [[0 for _ in range(l2 + 1)] for _ in range(l1 + 1)]
+	
+	for i in range(l1 + 1):
+		matrix[i][0] = i
+	for j in range(l2 + 1):
+		matrix[0][j] = j
+		
+	for i in range(1, l1 + 1):
+		for j in range(1, l2 + 1):
+			change = 1 if s1[i - 1] != s2[j - 1] else 0
+			matrix[i][j] = min(
+				matrix[i][j - 1] + 1,
+				matrix[i - 1][j] + 1,
+				matrix[i - 1][j - 1] + change
+			)
+	return matrix[l1][l2]
+	\end{lstlisting}
+\end{center}
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:lev_dist_rec,caption=Функция нахождения расстояния Левенштейна рекурсивно]
+def lev_dist_rec(s1, s2, l1, l2):
+	if l1 == 0:
+		return l2
+		
+	if l2 == 0:
+		return l1
+	
+	change = 1 if s1[l1 - 1] != s2[l2 - 1] else 0
+	res = min(
+		lev_dist_rec(s1, s2, l1, l2 - 1) + 1,
+		lev_dist_rec(s1, s2, l1 - 1, l2) + 1,
+		lev_dist_rec(s1, s2, l1 - 1, l2 - 1) + change
+	)
+	return res
+	\end{lstlisting}
+\end{center}
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:lev_dist_rec_cache,caption=Функция нахождения расстояния Левенштейна рекурсивно с кэшем]
+def lev_rec_cache_entry(s1, s2):
+	l1, l2 = len(s1), len(s2)
+	
+	matrix = [[-1 for _ in range(l2 + 1)] for _ in range(l1 + 1)]
+	lev_rec_cache(s1, s2, l1, l2, matrix)
+	return matrix[l1][l2]
+
+def lev_rec_cache(s1, s2, l1, l2, matrix):
+	if l1 == 0:
+		matrix[l1][l2] = l2
+	elif l2 == 0:
+		matrix[l1][l2] = l1
+	else:
+		if matrix[l1 - 1][l2] == -1:
+			lev_rec_cache(s1, s2, l1 - 1, l2, matrix)
+		if matrix[l1][l2 - 1] == -1:
+			lev_rec_cache(s1, s2, l1, l2 - 1, matrix)
+		if matrix[l1 - 1][l2 - 1] == -1:
+			lev_rec_cache(s1, s2, l1 - 1, l2 - 1, matrix)
+		
+		change = 1 if s1[l1 - 1] != s2[l2 - 1] else 0
+		matrix[l1][l2] = min(
+			matrix[l1][l2 - 1] + 1,
+			matrix[l1 - 1][l2] + 1,
+			matrix[l1 - 1][l2 - 1] + change
+		)
+	\end{lstlisting}
+\end{center}
+
+\newpage
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:dam_lev_dist,caption=Функция нахождения расстояния Дамерау~---~Левенштейна нерекурсивно]
+def dam_lev_dist(s1, s2):
+	l1, l2 = len(s1), len(s2)
+	matrix = [[0 for _ in range(l2 + 1)] for _ in range(l1 + 1)]
+	
+	for i in range(l1 + 1):
+		matrix[i][0] = i
+	for j in range(l2 + 1):
+		matrix[0][j] = j
+	
+	for i in range(1, l1 + 1):
+		for j in range(1, l2 + 1):
+			change = 1 if s1[i - 1] != s2[j - 1] else 0
+			matrix[i][j] = min(
+				matrix[i][j - 1] + 1,
+				matrix[i - 1][j] + 1,
+				matrix[i - 1][j - 1] + change
+			)
+			if i > 1 and j > 1 and s1[i - 1] == s2[j - 2] and s1[i - 2] == s2[j - 1]:
+				matrix[i][j] = min(matrix[i][j], matrix[i - 2][j - 2] + 1)
+	return matrix[l1][l2]
+	\end{lstlisting}
+\end{center}
+
+\section{Тестирование}
+
+В таблице~[\ref{t:tests}] представлены данные о результатах тестирования реализации алгоритмов нахождения расстояния Левенштейна и Дамерау~---~Левенштейна.
+Все тесты пройдены успешно.
+
+\begin{table}[!ht]
+	
+	\begin{center}
+		\small
+		\begin{threeparttable}
+			\caption{Модульные тесты}
+			\label{t:tests}
+			\begin{tabular}{|c|c|c|c|c|c|}
+				\hline
+				\multicolumn{2}{|c|}{\bfseries Входные данные}
+				& \multicolumn{4}{c|}{\bfseries Алгоритм и расстояние} \\ 
+				\hline 
+				&
+				& \multicolumn{3}{c|}{\bfseries Левенштейна} 
+				& \multicolumn{1}{c|}{\bfseries Дамерау~---~Левенштейна} \\  
+				\cline{3-6}
+				
+				\bfseries Строка 1 
+				& \bfseries Строка 2 
+				& \bfseries Итеративный 
+				& \multicolumn{2}{c|}{\bfseries Рекурсивный} 
+				& \bfseries Итеративный \\ 
+				\cline{4-5}
+				
+			 	& & & \bfseries Без кэша & \bfseries С кэшем & \\
+				\hline
+				polynomial & exponential & 6 & 6 & 6 & 6 \\
+				\hline
+				silent & listen & 4 & 4 & 4 & 4 \\
+				\hline
+				кот & скат & 2 & 2 & 2 & 2 \\
+				\hline
+				ab & ba & 2 & 2 & 2 & 1 \\
+				\hline
+			\end{tabular}	
+		\end{threeparttable}
+	\end{center}
+\end{table}
+
+\section*{Вывод}
+
+В данном разделе были рассмотрены требования к программному обеспечению, используемые средства реализации, приведена реализация алгоритмов и результаты тестирования.
+
+\clearpage

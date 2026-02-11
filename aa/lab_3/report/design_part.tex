@@ -1,0 +1,165 @@
+\chapter{Конструкторская часть}
+
+
+\section{Стандартный алгоритм}
+
+Схема стандартного алгоритма умножения матриц представлена на рисунке~\ref{fig:std}.
+
+\begin{figure}[h]
+	\centering
+	\includesvg[scale=0.7]{/Users/rf9/PycharmProjects/aa/lab_3/report/images/01.svg}
+	\caption{Схема стандартного алгоритма умножения матриц}
+	\label{fig:std}
+\end{figure}
+
+\newpage
+
+\section{Алгоритм Винограда}
+
+Схема алгоритма Винограда умножения матриц представлена на рисунках~\ref{fig:win} и~\ref{fig:win_2}.
+
+\begin{figure}[h]
+	\centering
+	\includesvg[scale=0.8]{/Users/rf9/PycharmProjects/aa/lab_3/report/images/02.svg}
+	\caption{Схема алгоритма Винограда умножения матриц}
+	\label{fig:win}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h]
+	\centering
+	\includesvg[scale=0.9]{/Users/rf9/PycharmProjects/aa/lab_3/report/images/02_2.svg}
+	\caption{Схема алгоритма Винограда умножения матриц}
+	\label{fig:win_2}
+\end{figure}
+
+\newpage
+
+\section{Оптимизированный алгоритм Винограда}
+
+Схема оптимизированного алгоритма Винограда умножения матриц представлена на рисунках~\ref{fig:opt} и~\ref{fig:opt_2}.
+
+\begin{figure}[h]
+	\centering
+	\includesvg[scale=0.9]{/Users/rf9/PycharmProjects/aa/lab_3/report/images/03.svg}
+	\caption{Схема оптимизированного алгоритма Винограда умножения матриц}
+	\label{fig:opt}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h]
+	\centering
+	\includesvg[scale=0.9]{/Users/rf9/PycharmProjects/aa/lab_3/report/images/03_2.svg}
+	\caption{Схема оптимизированного алгоритма Винограда умножения матриц}
+	\label{fig:opt_2}
+\end{figure}
+
+\newpage
+
+\section{Трудоемкость алгоритмов}
+Операции $+, -, +=, -=, []$ имеют трудоемкость 1.
+
+Операции $*, /, \%$ имеют трудоемкость 2.
+
+Трудоемкость условного оператора определяется формулой~\ref{eq:if}
+\begin{equation}
+	\label{eq:if}
+	f_{\text{усл.оп.}} = 
+	f_{\text{условия}} +
+	\begin{cases}
+		f_A, & \text{если условие выполняется,}\\
+		f_B, & \text{иначе.}
+	\end{cases}
+\end{equation}
+
+Трудоемкость цикла определяется формулой~\ref{eq:for}.
+\begin{equation}
+	\label{eq:for}
+	f_{\text{цикл}} = f_{\text{инициализации}} + f_{\text{сравнения}} + N\cdot(f_{\text{тела}} + f_{\text{инкремента}} + f_{\text{сравнения}})
+\end{equation}
+
+\subsection{Трудоемкость стандартного алгоритма}
+Стандартный алгоритм состоит из трех циклов.
+Третий по вложенности цикл имеет трудоемкость $2 + 11 \cdot N$. Тогда второй по вложенности имеет трудоемкость $2 + K \cdot (2 + (2 + 11 \cdot N))$. Тогда внешний цикл имеет трудоемкость $f = 2 + M \cdot (2 + (2 + K \cdot (2 + (2 + 11 \cdot N))))$.
+Т.~e. трудоемкость всего алгоритма равна $f_{\text{std}} = 2 + 4 \cdot M +  4 \cdot M \cdot K + 11 \cdot M \cdot K  \cdot N$.
+
+\subsection{Трудоемкость алгоритма Винограда}
+Трудоемкость заполнения вспомогательного массива $row\_factor$ равна $2 + M \cdot (6 + \frac{N}{2} \cdot 17)$.
+Трудоемкость заполнения вспомогательного массива $col\_factor$ равна $4 + \frac{N}{2} \cdot (6 + K \cdot 15)$.
+Трудоемкость наиболее вложенного цикла равна $4 + \frac{N}{2} \cdot 27$.
+Трудоемкость основного цикла равна $2 + M \cdot (2 + 2 + K \cdot (2 + 7 + (4 + \frac{N}{2} \cdot 29)))$.
+Трудоемкость условного оператора равна~\ref{eq:win_odd}.
+\begin{equation}
+	\label{eq:win_odd}
+	2 +
+	\begin{cases}
+		0, & \text{размер четный,}\\
+		2 + M \cdot (2 + 13 K), & \text{иначе.}
+	\end{cases}
+\end{equation}
+
+Т.~e. трудоемкость всего алгоритма равна~\ref{eq:win}.
+\begin{equation}
+	\label{eq:win}
+\begin{split}
+	f_{\text{Винограда}} = (2 + 6 M + 8.5 \cdot M \cdot N) + (4 + 3 N + 7.5 \cdot N \cdot K) + \\
+	+ (2 + 4 M + 13 \cdot M \cdot K + 14.5 \cdot M \cdot K \cdot N) + (2 + 
+	\begin{cases}
+		0, & \text{N четно}\\
+		2 + 2 M +  13 \cdot M \cdot K, & \text{иначе}
+	\end{cases}
+	) = \\ =
+	\begin{cases}
+		10 + 10 M + 3 N + 8.5 \cdot M \cdot N + 7.5 \cdot N \cdot K + 13 \cdot M \cdot K + 14.5 \cdot M \cdot K \cdot N, & \text{л.с.}\\
+		12 + 12  M + 3 N + 8.5 \cdot M \cdot N + 7.5 \cdot N \cdot K + 26 \cdot M \cdot K + 14.5 \cdot M \cdot K \cdot N, &\text{х. с.}
+	\end{cases}
+\end{split}
+\end{equation}
+
+\subsection{Трудоемкость оптимизированного алгоритма винограда}
+Трудоемкость заполнения вспомогательного массива $row\_factor$ равна $2+ M\cdot (4+ \frac{N}{2}\cdot11)$.
+Трудоемкость заполнения вспомогательного массива $col\_factor$ равна $2 + \frac{N}{2} \cdot (4 + K \cdot 11)$.
+Трудоемкость вычисления флага для условия равна $3$.
+Трудоемкость наиболее вложенного цикла равна $2 + \frac{N}{2} \cdot 19$.
+Трудоемкость условного оператора равна~\ref{eq:opt_odd}.
+\begin{equation}
+	\label{eq:opt_odd}
+	1 +
+	\begin{cases}
+		0, & \text{размер четный,}\\
+		11, & \text{иначе.}
+	\end{cases}
+\end{equation}
+
+Трудоемкость основного цикла равна~\ref{eq:main_for}.
+\begin{equation}
+	\label{eq:main_for}
+	2 + M \cdot (2 + 2 + K \cdot (2 + 6 + (2 + \frac{N}{2} \cdot 19) + 1 + 
+	\begin{cases}
+			0, & \text{размер четный,}\\
+			11, & \text{иначе.}
+	\end{cases}))
+\end{equation}
+
+Т.~e. трудоемкость всего алгоритма равна~\ref{eq:opt}.
+\begin{equation}
+	\label{eq:opt}
+	\begin{split}
+		f_{\text{Опт. Винограда}} = (2 + 4 M + 5.5 \cdot M \cdot N) + (2 + 2 N + 5.5 \cdot N \cdot K) + \\
+		+ (2 + 4 M + 11 \cdot M \cdot K + 9.5 \cdot M \cdot K \cdot N + \begin{cases}
+			0, & \text{N четно}\\
+			11 \cdot M \cdot K, & \text{иначе}
+		\end{cases} = \\ =
+		\begin{cases}
+			6 + 8 M + 2 N + 5.5 \cdot M \cdot N + 5.5 \cdot N \cdot K + 11 \cdot M \cdot K + 9.5 \cdot M \cdot K \cdot N, & \text{л.с.}\\
+			6 + 8 M + 2 N + 5.5 \cdot M \cdot N + 5.5 \cdot N \cdot K + 22 \cdot M \cdot K + 9.5 \cdot M \cdot K \cdot N, &\text{х. с.}
+		\end{cases}
+	\end{split}
+\end{equation}
+
+\section*{Вывод}
+
+В данной части работы были описаны стандартный алгоритм, алгоритм Винограда, оптимизированный алгоритм Винограда умножения матриц. Оценены их трудоемкости.
+\clearpage

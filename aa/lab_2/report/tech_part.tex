@@ -1,0 +1,87 @@
+\chapter{Технологическая часть}
+
+\section{Требования к программному обеспечению}
+
+Входные данные: массив и искомое значение;
+
+Выходные данные: позиция искомого значения в массиве и количество сравнений.
+
+\section{Средства реализации}
+Алгоритмы для данной лабораторной работы были реализованы на языке $Python$~\cite{lit3}, который имеет библиотеку для визуализации данных $Matplotlib$~\cite{lit4}.
+
+\section{Реализация алгоритмов}
+
+Реализация алгоритмов нахождения искомого значения полным перебором и двоичным поиском представлена в листингах~(\ref{lst:lin_search}) и~(\ref{lst:bin_search}).
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:lin_search,caption=Функция нахождения искомого значения полным перебором]
+def linear_search(arr, x):
+	comparisons, xi = 0, -1
+	for i in range(len(arr)):
+		comparisons += 1
+		if arr[i] == x:
+			xi = i
+			break
+	return xi, comparisons
+	\end{lstlisting}
+\end{center}
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\begin{lstlisting}[label=lst:bin_search,caption=Функция нахождения искомого значения двоичным поиском]
+def binary_search(arr, x):
+	comparisons, xi = 0, -1
+	l, r = 0, len(arr) - 1
+	while l <= r:
+		m = (l + r) // 2
+		comparisons += 1
+		if arr[m] < x:
+			l = m + 1
+		elif arr[m] > x:
+			r = m - 1
+		else:
+			xi = m
+			break
+	return xi, comparisons
+	\end{lstlisting}
+\end{center}
+
+\section{Тестирование}
+
+В таблице~\ref{t:tests} представлены данные о результатах тестирования реализации алгоритмов нахождения искомого значения полным перебором и двоичным поиском.
+
+\begin{table}[!ht]
+	
+	\begin{center}
+		\small
+		\begin{threeparttable}
+			\caption{Модульные тесты}
+			\label{t:tests}
+			\begin{tabular}{|c|c|r|r|r|r|}
+				\hline
+				\multicolumn{2}{|c|}{\bfseries Входные данные}
+				& \multicolumn{4}{c|}{\bfseries Алгоритм, индекс и количество сравнений} \\ 
+				\hline 
+				\bfseries Массив
+				& \bfseries Искомое значение
+				& \multicolumn{2}{c|}{\bfseries Полный перебор}
+				& \multicolumn{2}{c|}{\bfseries Двоичный поиск} \\  
+				\hline
+				arr \{...\} & 34772 & 454 & 455 & 331 & 9 \\
+				\hline
+				arr \{...\} & 34773 & -1 & 1033 & -1 & 10 \\
+				\hline
+				arr \{...\} & 999 & -1 & 1033 & -1 & 10 \\
+				\hline
+			\end{tabular}	
+		\end{threeparttable}
+	\end{center}
+\end{table}
+Все тесты пройдены успешно.
+
+\section*{Вывод}
+
+В данном разделе были рассмотрены требования к программному обеспечению, используемые средства реализации, приведена реализация алгоритмов и результаты тестирования.
+
+\clearpage
