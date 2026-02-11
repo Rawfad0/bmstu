@@ -1,0 +1,21 @@
+body {
+  font-family: Arial;
+  background: #f0f0f0;
+  text-align: center;
+}
+
+h1, h2, h3 {
+  text-align: center;
+}
+
+/* Markdown-контент */
+#content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: left;   /* ← ВАЖНО */
+}
+
+/* Кодовые блоки */
+pre, code {
+  text-align: left;
+}

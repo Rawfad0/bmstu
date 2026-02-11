@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Markdown Viewer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>README</h1>
+<div id="content">Загрузка...</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+fetch("README.md")
+  .then(r => r.text())
+  .then(text => {
+    document.getElementById("content").innerHTML = marked.parse(text);
+  })
+  .catch(() => {
+    document.getElementById("content").innerText = "Ошибка загрузки";
+  });
+</script>
+
+</body>
+</html>
