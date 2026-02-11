@@ -1,0 +1,25 @@
+avl_tree_t avl_tree_node_balance(avl_tree_t tree)
+{
+    if (tree == NULL)
+        return tree;
+    
+    int left_height = get_height(tree->left);
+    int right_height = get_height(tree->right);
+
+    if (left_height - right_height == 2)
+    {
+        // Высота левого поддерава выше правого на более чем 1
+        if (get_height(tree->left->left) < get_height(tree->left->right))
+            tree->left = alv_tree_rotate_left(tree->left);
+        *tree = alv_tree_rotate_right(tree);
+    }
+    else if (left_height - right_height == -2)
+    {
+        // Высота правого поддерава выше левого на более чем 1
+        if (get_height(tree->right->left) > get_height(tree->right->right))
+            tree->right = alv_tree_rotate_right(tree->right);
+        *tree = alv_tree_rotate_left(tree);
+    }
+    else
+        return tree; // Дерево уже сбалансировано
+}
